@@ -11,6 +11,14 @@ import BlogPost from "@/pages/BlogPost";
 import AboutUs from "@/pages/AboutUs";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import TermsOfService from "@/pages/TermsOfService";
+import ShopTheLook from "@/pages/ShopTheLook";
+import DreamyBohoGardenWedding from "@/pages/DreamyBohoGardenWedding";
+import EnchantedForestRetreat from "@/pages/EnchantedForestRetreat";
+import WarmBohoLivingRoom from "@/pages/WarmBohoLivingRoom";
+import CozyApartmentLivingRoom from "@/pages/CozyApartmentLivingRoom";
+import JungleSpaRetreat from "@/pages/JungleSpaRetreat";
+import JungleSpaVibes from "@/pages/JungleSpaVibes";
+import CozyDormRoom from "@/pages/CozyDormRoom";
 import NotFound from "@/pages/not-found";
 import NewsletterPopup from "@/components/NewsletterPopup";
 
@@ -35,6 +43,14 @@ function Router() {
       <Route path="/pages/about" component={AboutUs} />
       <Route path="/pages/privacy-policy" component={PrivacyPolicy} />
       <Route path="/pages/terms-of-service" component={TermsOfService} />
+      <Route path="/shop-the-look" component={ShopTheLook} />
+      <Route path="/pages/dreamy-boho-garden-wedding" component={DreamyBohoGardenWedding} />
+      <Route path="/pages/enchanted-forest-retreat" component={EnchantedForestRetreat} />
+      <Route path="/pages/warm-boho-living-room" component={WarmBohoLivingRoom} />
+      <Route path="/pages/cozy-apartment-living-room" component={CozyApartmentLivingRoom} />
+      <Route path="/pages/jungle-spa-retreat" component={JungleSpaRetreat} />
+      <Route path="/pages/jungle-spa-vibes" component={JungleSpaVibes} />
+      <Route path="/pages/cozy-dorm-room" component={CozyDormRoom} />
 
       {/* Legacy redirects */}
       <Route path="/shop" component={BlogRedirect} />
