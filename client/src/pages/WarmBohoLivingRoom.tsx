@@ -163,6 +163,18 @@ export default function WarmBohoLivingRoom() {
       </main>
 
       <Footer />
+
+      {/* Sticky mobile CTA */}
+      <div className="fixed bottom-0 inset-x-0 z-40 md:hidden bg-background/95 backdrop-blur border-t px-4 py-3">
+        <a
+          href={SHOP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 w-full bg-foreground text-background font-semibold text-sm tracking-wider uppercase py-3.5 rounded-full hover:opacity-90 transition-opacity"
+        >
+          Get the Look <ArrowRight className="w-4 h-4" />
+        </a>
+      </div>
     </div>
   );
 }
