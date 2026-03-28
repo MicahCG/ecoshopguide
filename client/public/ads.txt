@@ -1,0 +1,8 @@
+# ads.txt — Authorised Digital Sellers file for EcoShopGuide
+# IMPORTANT: Replace ca-pub-XXXXXXXXXXXXXXXXXX with your actual AdSense Publisher ID
+# before deploying. Your publisher ID can be found in your AdSense account at:
+#   https://www.google.com/adsense → Account → Account information → Publisher ID
+#
+# Format: <SSP/Exchange Domain>, <Publisher Account ID>, <Relationship>, <Certification Authority ID>
+
+google.com, ca-pub-XXXXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0

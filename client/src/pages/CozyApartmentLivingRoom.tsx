@@ -2,6 +2,8 @@ import { Link } from "wouter";
 import { ArrowRight, Sofa, Leaf, Flame, Circle, Frame } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AffiliateDisclosure from "@/components/AffiliateDisclosure";
+import { usePageSEO } from "@/hooks/usePageSEO";
 import heroImage from "@assets/cozy-apartment-living-room-hero.png";
 
 const SHOP_URL = "https://mavely.app.link/fjJPuIWcR1b";
@@ -40,14 +42,22 @@ const PRODUCTS = [
 ];
 
 export default function CozyApartmentLivingRoom() {
+  usePageSEO({
+    title: "Cozy Apartment Living Room Decor Ideas | EcoShopGuide",
+    description:
+      "Small living room ideas for your first apartment: linen sofas, macrame planters, woven baskets, and cozy fireplace styling. Budget-friendly eco decor for any apartment living room.",
+    canonical: "https://ecoshopguide.com/pages/cozy-apartment-living-room",
+  });
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
+      <AffiliateDisclosure />
 
       <main className="flex-1">
         {/* ── Hero ── */}
         <section className="relative w-full">
-          <div className="max-w-6xl mx-auto px-4 md:px-6 pt-24 md:pt-32 pb-12 md:pb-20">
+          <div className="max-w-6xl mx-auto px-4 md:px-6 pt-16 md:pt-24 pb-12 md:pb-20">
             <p className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 mb-4 text-center">
               Pinterest Pick
             </p>
@@ -55,13 +65,9 @@ export default function CozyApartmentLivingRoom() {
               Small Living Room Ideas for Your First Apartment
             </h1>
             <p className="mt-5 text-base md:text-lg text-muted-foreground text-center max-w-2xl mx-auto leading-relaxed">
-              New place, blank walls, and no idea how to style your living room?
-              Start with a comfy couch, a simple coffee table, a few plants, and
-              warm lighting for a cozy living room vibe. These budget-friendly
-              decor ideas work for any apartment living room.
+              New place, blank walls, and no idea how to style your living room? Start with a comfy couch, a simple coffee table, a few plants, and warm lighting for a cozy living room vibe. These budget-friendly decor ideas work for any apartment living room.
             </p>
           </div>
-
           <div className="max-w-5xl mx-auto px-4 md:px-6">
             <div className="rounded-xl overflow-hidden shadow-lg">
               <img
@@ -82,15 +88,7 @@ export default function CozyApartmentLivingRoom() {
             Warm Neutrals, Natural Textures, Instant Comfort
           </h2>
           <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
-            This room proves you do not need a big budget or a big space to
-            create somewhere that feels like home. A deep linen sofa loaded
-            with textured throw pillows sits against a reclaimed wood accent
-            wall, while a crackling fireplace framed in white stucco fills
-            the room with warmth. Macrame planters hang at staggered heights,
-            woven baskets line the floor, and a chunky knit area rug ties
-            everything together underfoot. The palette stays in the land of
-            oatmeal, sand, and sage — quiet enough to relax in, layered
-            enough to feel rich and lived-in from day one.
+            This room proves you do not need a big budget or a big space to create somewhere that feels like home. A deep linen sofa loaded with textured throw pillows sits against a reclaimed wood accent wall, while a crackling fireplace framed in white stucco fills the room with warmth. Macrame planters hang at staggered heights, woven baskets line the floor, and a chunky knit area rug ties everything together underfoot. The palette stays in the land of oatmeal, sand, and sage — quiet enough to relax in, layered enough to feel rich and lived-in from day one.
           </p>
         </section>
 
@@ -103,7 +101,6 @@ export default function CozyApartmentLivingRoom() {
             <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-12 md:mb-16">
               What Makes This Look
             </h2>
-
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {PRODUCTS.map((product) => (
                 <div
@@ -133,9 +130,7 @@ export default function CozyApartmentLivingRoom() {
               Shop the Look
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-xl mx-auto">
-              We have gathered budget-friendly, apartment-ready pieces that
-              capture the same cozy, layered feel — so you can go from blank
-              walls to a space that actually feels like yours.
+              We have gathered budget-friendly, apartment-ready pieces that capture the same cozy, layered feel — so you can go from blank walls to a space that actually feels like yours.
             </p>
             <a
               href={SHOP_URL}
@@ -143,7 +138,8 @@ export default function CozyApartmentLivingRoom() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-foreground text-background font-semibold text-sm tracking-wider uppercase px-8 py-4 rounded-full hover:opacity-90 transition-opacity"
             >
-              Shop the Look <ArrowRight className="w-4 h-4" />
+              Shop the Look
+              <ArrowRight className="w-4 h-4" />
             </a>
           </div>
         </section>
@@ -156,7 +152,8 @@ export default function CozyApartmentLivingRoom() {
             </p>
             <Link href="/shop-the-look">
               <span className="inline-flex items-center gap-2 text-sm font-semibold tracking-wider uppercase hover:text-primary transition-colors">
-                Browse all looks <ArrowRight className="w-4 h-4" />
+                Browse all looks
+                <ArrowRight className="w-4 h-4" />
               </span>
             </Link>
           </div>
@@ -173,7 +170,8 @@ export default function CozyApartmentLivingRoom() {
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 w-full bg-foreground text-background font-semibold text-sm tracking-wider uppercase py-3.5 rounded-full hover:opacity-90 transition-opacity"
         >
-          Get the Look <ArrowRight className="w-4 h-4" />
+          Get the Look
+          <ArrowRight className="w-4 h-4" />
         </a>
       </div>
     </div>

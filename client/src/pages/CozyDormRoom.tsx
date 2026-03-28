@@ -2,6 +2,8 @@ import { Link } from "wouter";
 import { ArrowRight, Leaf, Lightbulb, Bed, Frame, RectangleHorizontal } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AffiliateDisclosure from "@/components/AffiliateDisclosure";
+import { usePageSEO } from "@/hooks/usePageSEO";
 import heroImage from "@assets/cozy-dorm-room-hero.png";
 
 const SHOP_URL = "https://mavely.app.link/1pwRdJJdR1b";
@@ -40,14 +42,22 @@ const PRODUCTS = [
 ];
 
 export default function CozyDormRoom() {
+  usePageSEO({
+    title: "Cozy Dorm Room Decor Ideas | EcoShopGuide",
+    description:
+      "Transform your dorm room with cozy, eco-friendly decor: white linen bedding, warm fairy lights, hanging plants, Moroccan rugs, and a personal gallery wall. Budget-friendly dorm ideas.",
+    canonical: "https://ecoshopguide.com/pages/cozy-dorm-room",
+  });
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
+      <AffiliateDisclosure />
 
       <main className="flex-1">
         {/* ── Hero ── */}
         <section className="relative w-full">
-          <div className="max-w-6xl mx-auto px-4 md:px-6 pt-24 md:pt-32 pb-12 md:pb-20">
+          <div className="max-w-6xl mx-auto px-4 md:px-6 pt-16 md:pt-24 pb-12 md:pb-20">
             <p className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 mb-4 text-center">
               Pinterest Pick
             </p>
@@ -55,12 +65,9 @@ export default function CozyDormRoom() {
               Cozy Dorm Room Ideas for an Eco-Friendly Refresh
             </h1>
             <p className="mt-5 text-base md:text-lg text-muted-foreground text-center max-w-2xl mx-auto leading-relaxed">
-              Create a cozy, eco-conscious dorm vibe with earthy textures, warm
-              fairy lights, and thrifted finds that feel like home. Think neutral
-              palettes, natural wood, and soft woven blankets on a budget.
+              Create a cozy, eco-conscious dorm vibe with earthy textures, warm fairy lights, and thrifted finds that feel like home. Think neutral palettes, natural wood, and soft woven blankets on a budget.
             </p>
           </div>
-
           <div className="max-w-5xl mx-auto px-4 md:px-6">
             <div className="rounded-xl overflow-hidden shadow-lg">
               <img
@@ -81,16 +88,7 @@ export default function CozyDormRoom() {
             Warm Neutrals, Fairy Lights & Personal Touches
           </h2>
           <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
-            Proof that a tiny dorm room can feel like a sanctuary. The entire
-            palette stays in soft whites, creams, and natural wood tones,
-            letting texture do all the talking — a sherpa throw here, a
-            faux-fur pillow there, a tasseled Moroccan rug underfoot. Fairy
-            lights trace the ceiling like a warm halo, a hanging pothos
-            brings the outdoors in beside the window, and every inch of wall
-            space is covered with a curated collage of art prints, photos,
-            and postcards. It is budget-friendly, renter-friendly, and
-            completely personal — the kind of room that makes you want to
-            skip the library and study right here.
+            Proof that a tiny dorm room can feel like a sanctuary. The entire palette stays in soft whites, creams, and natural wood tones, letting texture do all the talking — a sherpa throw here, a faux-fur pillow there, a tasseled Moroccan rug underfoot. Fairy lights trace the ceiling like a warm halo, a hanging pothos brings the outdoors in beside the window, and every inch of wall space is covered with a curated collage of art prints, photos, and postcards. It is budget-friendly, renter-friendly, and completely personal — the kind of room that makes you want to skip the library and study right here.
           </p>
         </section>
 
@@ -103,7 +101,6 @@ export default function CozyDormRoom() {
             <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-12 md:mb-16">
               What Makes This Look
             </h2>
-
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {PRODUCTS.map((product) => (
                 <div
@@ -133,10 +130,7 @@ export default function CozyDormRoom() {
               Shop the Look
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-xl mx-auto">
-              We have gathered budget-friendly, eco-conscious picks to help
-              you recreate this cozy dorm vibe — soft bedding, warm lighting,
-              easy-care plants, and textured rugs that make any small space
-              feel like home.
+              We have gathered budget-friendly, eco-conscious picks to help you recreate this cozy dorm vibe — soft bedding, warm lighting, easy-care plants, and textured rugs that make any small space feel like home.
             </p>
             <a
               href={SHOP_URL}
@@ -144,7 +138,8 @@ export default function CozyDormRoom() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-foreground text-background font-semibold text-sm tracking-wider uppercase px-8 py-4 rounded-full hover:opacity-90 transition-opacity"
             >
-              Shop the Look <ArrowRight className="w-4 h-4" />
+              Shop the Look
+              <ArrowRight className="w-4 h-4" />
             </a>
           </div>
         </section>
@@ -157,7 +152,8 @@ export default function CozyDormRoom() {
             </p>
             <Link href="/shop-the-look">
               <span className="inline-flex items-center gap-2 text-sm font-semibold tracking-wider uppercase hover:text-primary transition-colors">
-                Browse all looks <ArrowRight className="w-4 h-4" />
+                Browse all looks
+                <ArrowRight className="w-4 h-4" />
               </span>
             </Link>
           </div>
@@ -174,7 +170,8 @@ export default function CozyDormRoom() {
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 w-full bg-foreground text-background font-semibold text-sm tracking-wider uppercase py-3.5 rounded-full hover:opacity-90 transition-opacity"
         >
-          Get the Look <ArrowRight className="w-4 h-4" />
+          Get the Look
+          <ArrowRight className="w-4 h-4" />
         </a>
       </div>
     </div>

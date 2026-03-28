@@ -1,7 +1,10 @@
+import { useEffect } from "react";
 import { Link } from "wouter";
 import { ArrowRight, TreePine, Lamp, Flower2, Armchair, Scroll } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AffiliateDisclosure from "@/components/AffiliateDisclosure";
+import { usePageSEO } from "@/hooks/usePageSEO";
 import heroImage from "@assets/enchanted-forest-retreat-hero.png";
 
 const SHOP_URL = "https://mavely.app.link/cV5fH4NcR1b";
@@ -40,14 +43,22 @@ const PRODUCTS = [
 ];
 
 export default function EnchantedForestRetreat() {
+  usePageSEO({
+    title: "Enchanted Forest Retreat Decor Ideas | EcoShopGuide",
+    description:
+      "Step into the glow of an Enchanted Forest Haven. Shop moody greens, warm wood tones, iron lanterns, and vintage Persian rugs that bring woodland fairy-tale magic to your celebration or home.",
+    canonical: "https://ecoshopguide.com/pages/enchanted-forest-retreat",
+  });
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
+      <AffiliateDisclosure />
 
       <main className="flex-1">
         {/* ── Hero ── */}
         <section className="relative w-full">
-          <div className="max-w-6xl mx-auto px-4 md:px-6 pt-24 md:pt-32 pb-12 md:pb-20">
+          <div className="max-w-6xl mx-auto px-4 md:px-6 pt-16 md:pt-24 pb-12 md:pb-20">
             <p className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 mb-4 text-center">
               Pinterest Pick
             </p>
@@ -55,13 +66,9 @@ export default function EnchantedForestRetreat() {
               Explore This Dreamy Enchanted Forest Retreat Vibe
             </h1>
             <p className="mt-5 text-base md:text-lg text-muted-foreground text-center max-w-2xl mx-auto leading-relaxed">
-              Step into the glow of an Enchanted Forest Haven, where moody
-              greens, warm wood tones, and soft golden light create a storybook
-              feel. Think mossy textures, fairycore accents, cottage-inspired
-              details, and magical forest atmosphere.
+              Step into the glow of an Enchanted Forest Haven, where moody greens, warm wood tones, and soft golden light create a storybook feel. Think mossy textures, fairycore accents, cottage-inspired details, and magical forest atmosphere.
             </p>
           </div>
-
           {/* Full-width hero image */}
           <div className="max-w-5xl mx-auto px-4 md:px-6">
             <div className="rounded-xl overflow-hidden shadow-lg">
@@ -83,15 +90,7 @@ export default function EnchantedForestRetreat() {
             Woodland Fairy Tale Meets Bohemian Warmth
           </h2>
           <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
-            Picture a hidden clearing beneath a living canopy of sycamores and
-            oaks, their autumn-kissed leaves filtering golden hour light onto
-            the ceremony below. A grand floral arch bursts with deep burgundy,
-            burnt sienna, and blush — cascading like wildflowers that nature
-            arranged herself. Vintage lanterns sway gently overhead, pillar
-            candles line the stone path, and a richly patterned rug leads the
-            way down an aisle framed by overflowing garden arrangements. It is
-            equal parts untamed and intentional — a space that feels like
-            stepping into the pages of an enchanted storybook.
+            Picture a hidden clearing beneath a living canopy of sycamores and oaks, their autumn-kissed leaves filtering golden hour light onto the ceremony below. A grand floral arch bursts with deep burgundy, burnt sienna, and blush — cascading like wildflowers that nature arranged herself. Vintage lanterns sway gently overhead, pillar candles line the stone path, and a richly patterned rug leads the way down an aisle framed by overflowing garden arrangements. It is equal parts untamed and intentional — a space that feels like stepping into the pages of an enchanted storybook.
           </p>
         </section>
 
@@ -104,7 +103,6 @@ export default function EnchantedForestRetreat() {
             <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-12 md:mb-16">
               What Makes This Look
             </h2>
-
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {PRODUCTS.map((product) => (
                 <div
@@ -134,9 +132,7 @@ export default function EnchantedForestRetreat() {
               Shop the Look
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-xl mx-auto">
-              We have curated eco-friendly picks that capture the same woodland
-              magic — rich autumn tones, vintage textures, and enchanted forest
-              vibes for your own celebration or reading nook.
+              We have curated eco-friendly picks that capture the same woodland magic — rich autumn tones, vintage textures, and enchanted forest vibes for your own celebration or reading nook.
             </p>
             <a
               href={SHOP_URL}
@@ -144,7 +140,8 @@ export default function EnchantedForestRetreat() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-foreground text-background font-semibold text-sm tracking-wider uppercase px-8 py-4 rounded-full hover:opacity-90 transition-opacity"
             >
-              Shop the Look <ArrowRight className="w-4 h-4" />
+              Shop the Look
+              <ArrowRight className="w-4 h-4" />
             </a>
           </div>
         </section>
@@ -157,7 +154,8 @@ export default function EnchantedForestRetreat() {
             </p>
             <Link href="/shop-the-look">
               <span className="inline-flex items-center gap-2 text-sm font-semibold tracking-wider uppercase hover:text-primary transition-colors">
-                Browse all looks <ArrowRight className="w-4 h-4" />
+                Browse all looks
+                <ArrowRight className="w-4 h-4" />
               </span>
             </Link>
           </div>
@@ -174,7 +172,8 @@ export default function EnchantedForestRetreat() {
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 w-full bg-foreground text-background font-semibold text-sm tracking-wider uppercase py-3.5 rounded-full hover:opacity-90 transition-opacity"
         >
-          Get the Look <ArrowRight className="w-4 h-4" />
+          Get the Look
+          <ArrowRight className="w-4 h-4" />
         </a>
       </div>
     </div>

@@ -2,6 +2,8 @@ import { Link } from "wouter";
 import { ArrowRight, Leaf, Flame, Bed, TreePine, Scroll } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AffiliateDisclosure from "@/components/AffiliateDisclosure";
+import { usePageSEO } from "@/hooks/usePageSEO";
 import heroImage from "@assets/jungle-spa-vibes-hero.png";
 
 const SHOP_URL = "https://mavely.app.link/pW8ItLkdR1b";
@@ -40,14 +42,22 @@ const PRODUCTS = [
 ];
 
 export default function JungleSpaVibes() {
+  usePageSEO({
+    title: "Jungle Spa Vibes Decor Ideas | EcoShopGuide",
+    description:
+      "Bring Bali pavilion energy home with jungle spa vibes: canopied daybeds, scattered candles, tropical greenery, timber beams, and woven jute rugs. Eco-friendly wellness sanctuary decor.",
+    canonical: "https://ecoshopguide.com/pages/jungle-spa-vibes",
+  });
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
+      <AffiliateDisclosure />
 
       <main className="flex-1">
         {/* ── Hero ── */}
         <section className="relative w-full">
-          <div className="max-w-6xl mx-auto px-4 md:px-6 pt-24 md:pt-32 pb-12 md:pb-20">
+          <div className="max-w-6xl mx-auto px-4 md:px-6 pt-16 md:pt-24 pb-12 md:pb-20">
             <p className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 mb-4 text-center">
               Pinterest Pick
             </p>
@@ -55,14 +65,9 @@ export default function JungleSpaVibes() {
               Bring Jungle Spa Vibes Into Your Space
             </h1>
             <p className="mt-5 text-base md:text-lg text-muted-foreground text-center max-w-2xl mx-auto leading-relaxed">
-              Step into jungle calm with this dreamy eco wellness retreat scene
-              filled with lush greenery, glowing candles, and spa-inspired
-              textures. Perfect for your next self-care reset — create cozy
-              junglecore vibes at home with tips for earthy lighting and
-              grounding spaces.
+              Step into jungle calm with this dreamy eco wellness retreat scene filled with lush greenery, glowing candles, and spa-inspired textures. Perfect for your next self-care reset — create cozy junglecore vibes at home with tips for earthy lighting and grounding spaces.
             </p>
           </div>
-
           <div className="max-w-5xl mx-auto px-4 md:px-6">
             <div className="rounded-xl overflow-hidden shadow-lg">
               <img
@@ -83,17 +88,7 @@ export default function JungleSpaVibes() {
             Bali Pavilion Meets Candlelit Sanctuary
           </h2>
           <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
-            This is the space you picture when someone says "wellness retreat."
-            Heavy timber beams hold up a living ceiling of tropical vines and
-            string lights, while concrete steps lead down into a softly lit
-            lounge where a canopied daybed waits behind flowing linen curtains.
-            Every surface is dotted with pillar candles — on the steps, beside
-            the plants, nestled between stones — their warm amber glow the
-            only light source in the room. Woven jute rugs soften the raw
-            floor, and a low cushion lounge invites you to sit, breathe, and
-            let the jungle do the rest. It is equal parts grounding and
-            magical — a space that proves self-care can be built into the
-            architecture of your home.
+            This is the space you picture when someone says "wellness retreat." Heavy timber beams hold up a living ceiling of tropical vines and string lights, while concrete steps lead down into a softly lit lounge where a canopied daybed waits behind flowing linen curtains. Every surface is dotted with pillar candles — on the steps, beside the plants, nestled between stones — their warm amber glow the only light source in the room. Woven jute rugs soften the raw floor, and a low cushion lounge invites you to sit, breathe, and let the jungle do the rest. It is equal parts grounding and magical — a space that proves self-care can be built into the architecture of your home.
           </p>
         </section>
 
@@ -106,7 +101,6 @@ export default function JungleSpaVibes() {
             <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-12 md:mb-16">
               What Makes This Look
             </h2>
-
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {PRODUCTS.map((product) => (
                 <div
@@ -136,10 +130,7 @@ export default function JungleSpaVibes() {
               Shop the Look
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-xl mx-auto">
-              We have gathered jungle-inspired essentials to bring this
-              retreat energy home — candles, linen drapes, tropical planters,
-              woven textiles, and grounding accents for your own wellness
-              sanctuary.
+              We have gathered jungle-inspired essentials to bring this retreat energy home — candles, linen drapes, tropical planters, woven textiles, and grounding accents for your own wellness sanctuary.
             </p>
             <a
               href={SHOP_URL}
@@ -147,7 +138,8 @@ export default function JungleSpaVibes() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-foreground text-background font-semibold text-sm tracking-wider uppercase px-8 py-4 rounded-full hover:opacity-90 transition-opacity"
             >
-              Shop the Look <ArrowRight className="w-4 h-4" />
+              Shop the Look
+              <ArrowRight className="w-4 h-4" />
             </a>
           </div>
         </section>
@@ -160,7 +152,8 @@ export default function JungleSpaVibes() {
             </p>
             <Link href="/shop-the-look">
               <span className="inline-flex items-center gap-2 text-sm font-semibold tracking-wider uppercase hover:text-primary transition-colors">
-                Browse all looks <ArrowRight className="w-4 h-4" />
+                Browse all looks
+                <ArrowRight className="w-4 h-4" />
               </span>
             </Link>
           </div>
@@ -177,7 +170,8 @@ export default function JungleSpaVibes() {
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 w-full bg-foreground text-background font-semibold text-sm tracking-wider uppercase py-3.5 rounded-full hover:opacity-90 transition-opacity"
         >
-          Get the Look <ArrowRight className="w-4 h-4" />
+          Get the Look
+          <ArrowRight className="w-4 h-4" />
         </a>
       </div>
     </div>

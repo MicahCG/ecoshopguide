@@ -1,0 +1,10 @@
+# robots.txt for ecoshopguide.com
+# Allow all crawlers including Google AdSense Mediapartners
+
+User-agent: *
+Allow: /
+
+User-agent: Mediapartners-Google
+Allow: /
+
+Sitemap: https://ecoshopguide.com/sitemap.xml

@@ -9,6 +9,7 @@ import Home from "@/pages/Home";
 import BlogList from "@/pages/BlogList";
 import BlogPost from "@/pages/BlogPost";
 import AboutUs from "@/pages/AboutUs";
+import Contact from "@/pages/Contact";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import TermsOfService from "@/pages/TermsOfService";
 import ShopTheLook from "@/pages/ShopTheLook";
@@ -26,11 +27,9 @@ const BlogRedirect = () => <WouterRedirect to="/blog" />;
 
 function ScrollToTop() {
   const [location] = useLocation();
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);
-
   return null;
 }
 
@@ -41,6 +40,7 @@ function Router() {
       <Route path="/blog" component={BlogList} />
       <Route path="/blog/:slug" component={BlogPost} />
       <Route path="/pages/about" component={AboutUs} />
+      <Route path="/pages/contact" component={Contact} />
       <Route path="/pages/privacy-policy" component={PrivacyPolicy} />
       <Route path="/pages/terms-of-service" component={TermsOfService} />
       <Route path="/shop-the-look" component={ShopTheLook} />
@@ -51,7 +51,6 @@ function Router() {
       <Route path="/pages/jungle-spa-retreat" component={JungleSpaRetreat} />
       <Route path="/pages/jungle-spa-vibes" component={JungleSpaVibes} />
       <Route path="/pages/cozy-dorm-room" component={CozyDormRoom} />
-
       {/* Legacy redirects */}
       <Route path="/shop" component={BlogRedirect} />
       <Route path="/shop/:rest*" component={BlogRedirect} />
@@ -65,7 +64,6 @@ function Router() {
       <Route path="/bedroom/:rest*" component={BlogRedirect} />
       <Route path="/category" component={BlogRedirect} />
       <Route path="/category/:rest*" component={BlogRedirect} />
-
       <Route component={NotFound} />
     </Switch>
   );

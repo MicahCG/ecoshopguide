@@ -2,6 +2,8 @@ import { Link } from "wouter";
 import { ArrowRight, Leaf, Armchair, Circle, RectangleHorizontal, Frame } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AffiliateDisclosure from "@/components/AffiliateDisclosure";
+import { usePageSEO } from "@/hooks/usePageSEO";
 import heroImage from "@assets/warm-boho-living-room-hero.png";
 
 const SHOP_URL = "https://www.2modern.com/collections/living-room-furniture";
@@ -40,14 +42,22 @@ const PRODUCTS = [
 ];
 
 export default function WarmBohoLivingRoom() {
+  usePageSEO({
+    title: "Warm Boho Living Room Decor Ideas | EcoShopGuide",
+    description:
+      "Discover cozy boho living room ideas with earthy tones, leather poufs, indoor plants, and woven wall art. Curated modern and artisan pieces that bring bohemian warmth to any space.",
+    canonical: "https://ecoshopguide.com/pages/warm-boho-living-room",
+  });
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
+      <AffiliateDisclosure />
 
       <main className="flex-1">
         {/* ── Hero ── */}
         <section className="relative w-full">
-          <div className="max-w-6xl mx-auto px-4 md:px-6 pt-24 md:pt-32 pb-12 md:pb-20">
+          <div className="max-w-6xl mx-auto px-4 md:px-6 pt-16 md:pt-24 pb-12 md:pb-20">
             <p className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 mb-4 text-center">
               Pinterest Pick
             </p>
@@ -55,12 +65,9 @@ export default function WarmBohoLivingRoom() {
               Discover Warm Boho Vibes in This Cozy Living Room
             </h1>
             <p className="mt-5 text-base md:text-lg text-muted-foreground text-center max-w-2xl mx-auto leading-relaxed">
-              Cozy vibes meet grounded charm in this earthy boho living room
-              retreat — think layered textures, warm neutrals, woven accents,
-              and soft ambient lighting that makes every corner feel inviting.
+              Cozy vibes meet grounded charm in this earthy boho living room retreat — think layered textures, warm neutrals, woven accents, and soft ambient lighting that makes every corner feel inviting.
             </p>
           </div>
-
           <div className="max-w-5xl mx-auto px-4 md:px-6">
             <div className="rounded-xl overflow-hidden shadow-lg">
               <img
@@ -81,14 +88,7 @@ export default function WarmBohoLivingRoom() {
             Earthy Bohemian Meets Collected Comfort
           </h2>
           <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
-            This is the kind of corner that makes you cancel plans. Sage green
-            walls set a quiet, grounded mood while layers of warm brown leather,
-            hand-woven textiles, and burnished brass catch the soft light
-            filtering through sheer linen curtains. Every surface tells a story
-            — a live-edge mirror, a carved drum table stacked with well-loved
-            books, dried-floral wall art, and potted plants at every height that
-            make the room feel like it is breathing. It is bohemian without
-            trying too hard: personal, earthy, and impossibly inviting.
+            This is the kind of corner that makes you cancel plans. Sage green walls set a quiet, grounded mood while layers of warm brown leather, hand-woven textiles, and burnished brass catch the soft light filtering through sheer linen curtains. Every surface tells a story — a live-edge mirror, a carved drum table stacked with well-loved books, dried-floral wall art, and potted plants at every height that make the room feel like it is breathing. It is bohemian without trying too hard: personal, earthy, and impossibly inviting.
           </p>
         </section>
 
@@ -101,7 +101,6 @@ export default function WarmBohoLivingRoom() {
             <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-12 md:mb-16">
               What Makes This Look
             </h2>
-
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {PRODUCTS.map((product) => (
                 <div
@@ -131,10 +130,7 @@ export default function WarmBohoLivingRoom() {
               Shop the Look
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-xl mx-auto">
-              We have gathered modern and artisan living room pieces that
-              capture the same earthy warmth — textured seating, carved wood
-              surfaces, and lush greenery to bring this boho nook to life in
-              your own home.
+              We have gathered modern and artisan living room pieces that capture the same earthy warmth — textured seating, carved wood surfaces, and lush greenery to bring this boho nook to life in your own home.
             </p>
             <a
               href={SHOP_URL}
@@ -142,7 +138,8 @@ export default function WarmBohoLivingRoom() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-foreground text-background font-semibold text-sm tracking-wider uppercase px-8 py-4 rounded-full hover:opacity-90 transition-opacity"
             >
-              Shop the Look <ArrowRight className="w-4 h-4" />
+              Shop the Look
+              <ArrowRight className="w-4 h-4" />
             </a>
           </div>
         </section>
@@ -155,7 +152,8 @@ export default function WarmBohoLivingRoom() {
             </p>
             <Link href="/shop-the-look">
               <span className="inline-flex items-center gap-2 text-sm font-semibold tracking-wider uppercase hover:text-primary transition-colors">
-                Browse all looks <ArrowRight className="w-4 h-4" />
+                Browse all looks
+                <ArrowRight className="w-4 h-4" />
               </span>
             </Link>
           </div>
@@ -172,7 +170,8 @@ export default function WarmBohoLivingRoom() {
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 w-full bg-foreground text-background font-semibold text-sm tracking-wider uppercase py-3.5 rounded-full hover:opacity-90 transition-opacity"
         >
-          Get the Look <ArrowRight className="w-4 h-4" />
+          Get the Look
+          <ArrowRight className="w-4 h-4" />
         </a>
       </div>
     </div>

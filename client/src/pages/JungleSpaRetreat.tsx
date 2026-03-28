@@ -2,6 +2,8 @@ import { Link } from "wouter";
 import { ArrowRight, Leaf, Flame, Bath, Lamp, TreePine } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AffiliateDisclosure from "@/components/AffiliateDisclosure";
+import { usePageSEO } from "@/hooks/usePageSEO";
 import heroImage from "@assets/jungle-spa-retreat-hero.png";
 
 const SHOP_URL = "https://mavely.app.link/pW8ItLkdR1b";
@@ -40,14 +42,22 @@ const PRODUCTS = [
 ];
 
 export default function JungleSpaRetreat() {
+  usePageSEO({
+    title: "Jungle Spa Retreat Decor Ideas | EcoShopGuide",
+    description:
+      "Create an at-home jungle spa retreat with reclaimed wood walls, trailing ferns, iron lanterns, and a sunken soaking tub. Eco-friendly spa decor for a slow-living sanctuary.",
+    canonical: "https://ecoshopguide.com/pages/jungle-spa-retreat",
+  });
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
+      <AffiliateDisclosure />
 
       <main className="flex-1">
         {/* ── Hero ── */}
         <section className="relative w-full">
-          <div className="max-w-6xl mx-auto px-4 md:px-6 pt-24 md:pt-32 pb-12 md:pb-20">
+          <div className="max-w-6xl mx-auto px-4 md:px-6 pt-16 md:pt-24 pb-12 md:pb-20">
             <p className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 mb-4 text-center">
               Pinterest Pick
             </p>
@@ -55,13 +65,9 @@ export default function JungleSpaRetreat() {
               Bring a Jungle Spa Retreat Home to Relax
             </h1>
             <p className="mt-5 text-base md:text-lg text-muted-foreground text-center max-w-2xl mx-auto leading-relaxed">
-              Soft light, lush plants, and organic textures turn this jungle
-              oasis into a cozy eco-friendly spa retreat. Find ideas for slow
-              living, calm routines, and mindful spaces filled with natural
-              light and fresh air.
+              Soft light, lush plants, and organic textures turn this jungle oasis into a cozy eco-friendly spa retreat. Find ideas for slow living, calm routines, and mindful spaces filled with natural light and fresh air.
             </p>
           </div>
-
           <div className="max-w-5xl mx-auto px-4 md:px-6">
             <div className="rounded-xl overflow-hidden shadow-lg">
               <img
@@ -82,16 +88,7 @@ export default function JungleSpaRetreat() {
             Candlelit Jungle Meets At-Home Sanctuary
           </h2>
           <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
-            Imagine a bathroom that feels less like a room and more like a
-            hidden grotto deep in a tropical forest. Reclaimed wood planks
-            climb every wall and frame a sunken soaking tub, while dozens of
-            trailing ferns and vines cascade from above until the ceiling
-            disappears into a living canopy of green. The only light comes
-            from clusters of pillar candles and a single iron lantern, their
-            warm glow reflecting off the still water below. Stacked linen
-            towels sit ready on a stone tray. The air smells like earth,
-            greenery, and calm. This is what slow living looks like — a
-            space designed for nothing but rest.
+            Imagine a bathroom that feels less like a room and more like a hidden grotto deep in a tropical forest. Reclaimed wood planks climb every wall and frame a sunken soaking tub, while dozens of trailing ferns and vines cascade from above until the ceiling disappears into a living canopy of green. The only light comes from clusters of pillar candles and a single iron lantern, their warm glow reflecting off the still water below. Stacked linen towels sit ready on a stone tray. The air smells like earth, greenery, and calm. This is what slow living looks like — a space designed for nothing but rest.
           </p>
         </section>
 
@@ -104,7 +101,6 @@ export default function JungleSpaRetreat() {
             <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-12 md:mb-16">
               What Makes This Look
             </h2>
-
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {PRODUCTS.map((product) => (
                 <div
@@ -134,10 +130,7 @@ export default function JungleSpaRetreat() {
               Shop the Look
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-xl mx-auto">
-              We have gathered nature-inspired pieces that bring the same
-              restorative energy home — lush planters, warm wood accents,
-              candlelight essentials, and organic bath linens for your own
-              peaceful sanctuary.
+              We have gathered nature-inspired pieces that bring the same restorative energy home — lush planters, warm wood accents, candlelight essentials, and organic bath linens for your own peaceful sanctuary.
             </p>
             <a
               href={SHOP_URL}
@@ -145,7 +138,8 @@ export default function JungleSpaRetreat() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-foreground text-background font-semibold text-sm tracking-wider uppercase px-8 py-4 rounded-full hover:opacity-90 transition-opacity"
             >
-              Shop the Look <ArrowRight className="w-4 h-4" />
+              Shop the Look
+              <ArrowRight className="w-4 h-4" />
             </a>
           </div>
         </section>
@@ -158,7 +152,8 @@ export default function JungleSpaRetreat() {
             </p>
             <Link href="/shop-the-look">
               <span className="inline-flex items-center gap-2 text-sm font-semibold tracking-wider uppercase hover:text-primary transition-colors">
-                Browse all looks <ArrowRight className="w-4 h-4" />
+                Browse all looks
+                <ArrowRight className="w-4 h-4" />
               </span>
             </Link>
           </div>
@@ -175,7 +170,8 @@ export default function JungleSpaRetreat() {
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 w-full bg-foreground text-background font-semibold text-sm tracking-wider uppercase py-3.5 rounded-full hover:opacity-90 transition-opacity"
         >
-          Get the Look <ArrowRight className="w-4 h-4" />
+          Get the Look
+          <ArrowRight className="w-4 h-4" />
         </a>
       </div>
     </div>
