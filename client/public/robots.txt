@@ -7,4 +7,4 @@ Allow: /
 User-agent: Mediapartners-Google
 Allow: /
 
-Sitemap: https://ecoshopguide.com/sitemap.xml
+Sitemap: https://ecoshopguide.com/api/sitemap.xml

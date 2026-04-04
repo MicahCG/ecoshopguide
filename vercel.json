@@ -2,6 +2,8 @@
   "buildCommand": "npm run vercel-build",
   "outputDirectory": "dist/public",
   "rewrites": [
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
+    { "source": "/api/sitemap.xml", "destination": "/api/sitemap" },
     { "source": "/api/blogs/:slug", "destination": "/api/blogs?slug=:slug" },
     { "source": "/api/blogs", "destination": "/api/blogs" },
     { "source": "/api/products/:productId/reviews", "destination": "/api/reviews?productId=:productId" },
