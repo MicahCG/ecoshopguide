@@ -13,6 +13,7 @@ import Contact from "@/pages/Contact";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import TermsOfService from "@/pages/TermsOfService";
 import ShopTheLook from "@/pages/ShopTheLook";
+import IdeaListCategory from "@/pages/IdeaListCategory";
 import DreamyBohoGardenWedding from "@/pages/DreamyBohoGardenWedding";
 import EnchantedForestRetreat from "@/pages/EnchantedForestRetreat";
 import WarmBohoLivingRoom from "@/pages/WarmBohoLivingRoom";
@@ -44,6 +45,7 @@ function Router() {
       <Route path="/pages/privacy-policy" component={PrivacyPolicy} />
       <Route path="/pages/terms-of-service" component={TermsOfService} />
       <Route path="/shop-the-look" component={ShopTheLook} />
+      <Route path="/shop-the-look/:category" component={IdeaListCategory} />
       <Route path="/pages/dreamy-boho-garden-wedding" component={DreamyBohoGardenWedding} />
       <Route path="/pages/enchanted-forest-retreat" component={EnchantedForestRetreat} />
       <Route path="/pages/warm-boho-living-room" component={WarmBohoLivingRoom} />
