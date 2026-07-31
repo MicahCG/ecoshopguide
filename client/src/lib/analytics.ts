@@ -11,6 +11,8 @@ declare global {
   }
 }
 
+import { track } from '@vercel/analytics';
+
 // Initialize ring buffer
 if (typeof window !== 'undefined') {
   window.__ecoEventLog = window.__ecoEventLog || [];
@@ -58,11 +60,55 @@ function getUtmParams(): Record<string, string> {
 function getAttributionParams(): Record<string, string> {
   if (typeof window === 'undefined') return {};
 
+  const referrerDomain = document.referrer ? new URL(document.referrer).hostname : undefined;
+
   return {
     page_path: window.location.pathname,
-    ...(document.referrer ? { referrer: document.referrer } : {}),
+    ...(referrerDomain ? { referrer_domain: referrerDomain } : {}),
     ...getUtmParams(),
   };
+}
+
+function getSessionId(): string {
+  const key = 'eco_analytics_session_id';
+  let sessionId = sessionStorage.getItem(key);
+  if (!sessionId) {
+    sessionId = crypto.randomUUID();
+    sessionStorage.setItem(key, sessionId);
+  }
+  return sessionId;
+}
+
+function analyticsMetadata(params: Record<string, unknown>): Record<string, string | number | boolean> {
+  return Object.fromEntries(
+    Object.entries(params)
+      .filter(([key, value]) => !['page_path', 'referrer_domain', ...UTM_KEYS].includes(key) && ['string', 'number', 'boolean'].includes(typeof value))
+      .map(([key, value]) => [key, typeof value === 'string' ? value.slice(0, 255) : value as number | boolean])
+      .slice(0, 12),
+  );
+}
+
+function sendFirstPartyEvent(eventName: string, params: Record<string, unknown>): void {
+  if (typeof window === 'undefined') return;
+
+  const body = JSON.stringify({
+    sessionId: getSessionId(),
+    eventName,
+    pagePath: params.page_path,
+    referrerDomain: params.referrer_domain,
+    utmSource: params.utm_source,
+    utmMedium: params.utm_medium,
+    utmCampaign: params.utm_campaign,
+    utmContent: params.utm_content,
+    metadata: analyticsMetadata(params),
+  });
+
+  fetch('/api/analytics/events', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body,
+    keepalive: true,
+  }).catch(() => undefined);
 }
 
 function addToRingBuffer(eventName: string, params: Record<string, unknown>): void {
@@ -95,6 +141,8 @@ export function ecoTrack(eventName: string, params: Record<string, unknown> = {}
   };
 
   addToRingBuffer(eventName, fullParams);
+  sendFirstPartyEvent(eventName, fullParams);
+  track(eventName, analyticsMetadata(fullParams));
 
   if (isDebugMode()) {
     console.log('[GA4]', eventName, fullParams);
@@ -109,7 +157,7 @@ export function ecoTrack(eventName: string, params: Record<string, unknown> = {}
 export function initAnalytics(): void {
   if (typeof window === 'undefined') return;
   initUtmTracking();
-  console.log('[GA4] ecoTrack ready', { debug: isDebugMode() });
+  console.log('[analytics] ecoTrack ready', { debug: isDebugMode() });
 }
 
 // Newsletter tracking

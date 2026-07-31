@@ -1,15 +1,16 @@
 import { useEffect } from 'react';
 import { useLocation } from 'wouter';
+import { ecoTrack, initAnalytics } from '@/lib/analytics';
 
-export default function GoogleAnalytics() {
+export default function SiteAnalytics() {
   const [location] = useLocation();
 
   useEffect(() => {
-    if (typeof window.gtag === 'function') {
-      window.gtag('config', 'G-JWZKR16JFE', {
-        page_path: location,
-      });
-    }
+    initAnalytics();
+  }, []);
+
+  useEffect(() => {
+    ecoTrack('page_view', { page_path: location });
   }, [location]);
 
   return null;

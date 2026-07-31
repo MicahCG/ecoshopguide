@@ -1,9 +1,10 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { db, requireDb } from "./db";
-import { blogs, newsletterSubscribers } from "@shared/schema";
-import { eq, desc } from "drizzle-orm";
+import { analyticsEvents, blogs, newsletterSubscribers } from "@shared/schema";
+import { eq, desc, sql } from "drizzle-orm";
 import { Resend } from "resend";
+import { z } from "zod";
 
 // Initialize Resend for email
 const resend = process.env.RESEND_API_KEY
@@ -15,6 +16,10 @@ const RESEND_AUDIENCE_ID = process.env.RESEND_AUDIENCE_ID || null;
 const newsletterRateLimit = new Map<string, number[]>();
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const RATE_LIMIT_MAX = 5; // max 5 attempts per IP per hour
+const analyticsRateLimit = new Map<string, number[]>();
+const ANALYTICS_RATE_LIMIT_WINDOW_MS = 60 * 1000;
+const ANALYTICS_RATE_LIMIT_MAX = 120;
+let analyticsSchemaReady: Promise<void> | undefined;
 
 function isRateLimited(ip: string): boolean {
   const now = Date.now();
@@ -27,7 +32,98 @@ function isRateLimited(ip: string): boolean {
   return false;
 }
 
+function isAnalyticsRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const attempts = analyticsRateLimit.get(ip) || [];
+  const recent = attempts.filter(t => now - t < ANALYTICS_RATE_LIMIT_WINDOW_MS);
+  analyticsRateLimit.set(ip, recent);
+  if (recent.length >= ANALYTICS_RATE_LIMIT_MAX) return true;
+  recent.push(now);
+  analyticsRateLimit.set(ip, recent);
+  return false;
+}
+
+const analyticsEventSchema = z.object({
+  sessionId: z.string().uuid(),
+  eventName: z.string().regex(/^[a-z][a-z0-9_]{0,79}$/),
+  pagePath: z.string().startsWith("/").max(2_000),
+  referrerDomain: z.string().max(255).optional(),
+  utmSource: z.string().max(255).optional(),
+  utmMedium: z.string().max(255).optional(),
+  utmCampaign: z.string().max(255).optional(),
+  utmContent: z.string().max(255).optional(),
+  metadata: z.record(z.union([z.string().max(255), z.number(), z.boolean()])).default({}),
+});
+
+// Existing deployments predate Drizzle migration history. Bootstrap only the
+// new analytics relation, without trying to recreate the application's tables.
+function ensureAnalyticsSchema(): Promise<void> {
+  if (!analyticsSchemaReady) {
+    analyticsSchemaReady = (async () => {
+      const database = requireDb();
+      await database.execute(sql`
+        CREATE TABLE IF NOT EXISTS analytics_events (
+          id varchar PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+          session_id varchar(64) NOT NULL,
+          event_name varchar(80) NOT NULL,
+          page_path text NOT NULL,
+          referrer_domain varchar(255),
+          utm_source varchar(255),
+          utm_medium varchar(255),
+          utm_campaign varchar(255),
+          utm_content varchar(255),
+          metadata json DEFAULT '{}'::json NOT NULL,
+          occurred_at timestamp with time zone DEFAULT now() NOT NULL
+        )
+      `);
+      await database.execute(sql`CREATE INDEX IF NOT EXISTS analytics_events_occurred_at_idx ON analytics_events (occurred_at)`);
+      await database.execute(sql`CREATE INDEX IF NOT EXISTS analytics_events_event_name_occurred_at_idx ON analytics_events (event_name, occurred_at)`);
+      await database.execute(sql`CREATE INDEX IF NOT EXISTS analytics_events_session_id_occurred_at_idx ON analytics_events (session_id, occurred_at)`);
+    })().catch((error) => {
+      analyticsSchemaReady = undefined;
+      throw error;
+    });
+  }
+  return analyticsSchemaReady;
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
+
+  // Receive non-sensitive, first-party visitor events. The database is kept
+  // server-side so browser clients never receive a Supabase service key.
+  app.post("/api/analytics/events", async (req, res) => {
+    const start = Date.now();
+    const clientIp = req.ip || req.socket.remoteAddress || "unknown";
+
+    try {
+      if (isAnalyticsRateLimited(clientIp)) {
+        return res.status(429).json({ error: "Too many analytics events." });
+      }
+
+      const event = analyticsEventSchema.parse(req.body);
+      const database = requireDb();
+      await ensureAnalyticsSchema();
+      await database.insert(analyticsEvents).values(event);
+      console.log(JSON.stringify({
+        level: "info",
+        message: "analytics_event_recorded",
+        eventName: event.eventName,
+        duration_ms: Date.now() - start,
+      }));
+      return res.status(202).json({ accepted: true });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid analytics event." });
+      }
+      console.error(JSON.stringify({
+        level: "error",
+        message: "analytics_event_failed",
+        error: error instanceof Error ? error.message : String(error),
+        duration_ms: Date.now() - start,
+      }));
+      return res.status(500).json({ error: "Unable to record analytics event." });
+    }
+  });
 
   // Get all blog posts
   app.get("/api/blogs", async (req, res) => {

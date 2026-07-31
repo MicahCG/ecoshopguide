@@ -2,9 +2,10 @@ import { Switch, Route, Redirect as WouterRedirect, useLocation } from "wouter";
 import { useEffect } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import GoogleAnalytics from "@/components/GoogleAnalytics";
+import SiteAnalytics from "@/components/GoogleAnalytics";
 import Home from "@/pages/Home";
 import BlogList from "@/pages/BlogList";
 import BlogPost from "@/pages/BlogPost";
@@ -75,11 +76,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <GoogleAnalytics />
+        <SiteAnalytics />
         <ScrollToTop />
         <Toaster />
         <Router />
         <NewsletterPopup />
+        <Analytics />
       </TooltipProvider>
     </QueryClientProvider>
   );
