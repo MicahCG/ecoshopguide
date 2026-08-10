@@ -224,6 +224,53 @@
 }
 
 /**
+ * ── Storefront theme (home page only) ───────────────────────────────────────
+ * Ported from the design reference "EcoShopGuide Storefront.dc.html", variant A
+ * (editorial-first). Deliberately scoped to .esg-home rather than retuning the
+ * global tokens in :root, so the rest of the site keeps its current look until
+ * we decide to roll this out. To go site-wide, move these values into :root and
+ * swap --font-serif / --font-sans.
+ */
+.esg-home {
+  --esg-page: #f7f4ee;      /* page background        */
+  --esg-surface: #fffdf9;   /* cards, sheets          */
+  --esg-forest: #294b3a;    /* primary actions        */
+  --esg-forest-dark: #1f2a24;
+  --esg-terracotta: #c65f3e; /* eyebrows, accents     */
+  --esg-sand: #d8d4cb;      /* borders, dividers      */
+  --esg-clay: #e8ddc9;      /* tinted fills           */
+  --esg-muted: #6b735f;     /* secondary text         */
+  --esg-ink: #1f2a24;       /* primary text           */
+
+  --esg-serif: "Newsreader", Georgia, serif;
+  --esg-sans: "DM Sans", system-ui, sans-serif;
+  --esg-mono: ui-monospace, Menlo, monospace;
+
+  background: var(--esg-page);
+  color: var(--esg-ink);
+  font-family: var(--esg-sans);
+}
+
+/* The shared <Header> is near-white; tint it to match the cream page. */
+.esg-home > header {
+  background: rgba(247, 244, 238, 0.94);
+  border-color: var(--esg-sand);
+}
+
+.esg-home .esg-serif {
+  font-family: var(--esg-serif);
+  font-weight: 400;
+}
+
+/* Mono micro-label used above every section heading in the design. */
+.esg-home .esg-eyebrow {
+  font-family: var(--esg-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/**
  * Using the elevate system.
  * Automatic contrast adjustment.
  *
