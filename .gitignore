@@ -9,3 +9,4 @@ vite.config.ts.*
 .env.*.local
 *.log
 .vercelapi/index.js
+.claude/settings.local.json

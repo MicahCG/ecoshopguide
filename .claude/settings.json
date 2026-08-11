@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Edit(CLAUDE.md)",
+      "Edit(.claude/**)",
+      "Edit(docs/AGENT_OPERATIONS.md)",
+      "Edit(docs/CATALOG_OPERATIONS.md)",
+      "Edit(config/catalog-governance.json)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git reset:*)",
+      "Bash(git rebase:*)",
+      "Bash(git merge:*)",
+      "Bash(gh pr create:*)",
+      "Bash(gh pr edit:*)",
+      "Bash(gh pr close:*)",
+      "Bash(gh pr merge:*)",
+      "Bash(gh api:*)",
+      "Bash(gh workflow run:*)",
+      "Bash(gh:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(vercel:*)",
+      "Bash(npx vercel:*)",
+      "Bash(npm install:*)",
+      "Bash(npm update:*)",
+      "Bash(npm run db:*)",
+      "Bash(npx drizzle-kit:*)",
+      "Bash(psql:*)",
+      "Bash(rm -rf:*)"
+    ]
+  }
+}

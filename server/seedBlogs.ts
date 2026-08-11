@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { requireDb } from "./db";
 import { blogs } from "@shared/schema";
 
 const blogPosts = [
@@ -628,8 +628,9 @@ const blogPosts = [
 
 async function seedBlogs() {
   console.log("Seeding blog posts...");
+  const db = requireDb();
 
-  let inserted = 0;
+  let upserted = 0;
   try {
     for (const post of blogPosts) {
       const result = await db.insert(blogs).values(post)
@@ -643,14 +644,15 @@ async function seedBlogs() {
             cta: post.cta,
             category: post.category,
           }
-        });
-      if (result.rowCount && result.rowCount > 0) {
+        })
+        .returning({ id: blogs.id });
+      if (result.length > 0) {
         console.log(`Upserted blog: ${post.title}`);
-        inserted++;
+        upserted++;
       }
     }
 
-    console.log(`\nSuccessfully upserted ${inserted} blog posts!`);
+    console.log(`\nSuccessfully upserted ${upserted} blog posts!`);
   } catch (error) {
     console.error("Error seeding blogs:", error);
     throw error;

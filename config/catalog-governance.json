@@ -1,0 +1,239 @@
+{
+  "version": 1,
+  "mode": "recommend_only",
+  "commerce_source_of_truth": "shopify",
+  "supplier_priority": [
+    "shopify_collective_domestic",
+    "vetted_domestic_supplier",
+    "owned_wholesale_inventory_with_3pl",
+    "validated_private_label"
+  ],
+  "product_lifecycle": [
+    "candidate",
+    "supplier_review",
+    "sample_ordered",
+    "sample_approved",
+    "listing_draft",
+    "ready_for_approval",
+    "published",
+    "monitoring",
+    "paused",
+    "retired"
+  ],
+  "required_sourcing_fields": [
+    "supplier_name",
+    "supplier_product_id",
+    "supplier_country",
+    "ships_from_country",
+    "unit_cost",
+    "inbound_or_supplier_shipping_cost",
+    "suggested_retail_price",
+    "payment_terms",
+    "processing_time",
+    "delivery_range",
+    "return_window",
+    "return_destination",
+    "restocking_or_label_fees",
+    "defect_and_damage_responsibility",
+    "inventory_sync_method",
+    "compliance_documents",
+    "claim_evidence",
+    "sample_status"
+  ],
+  "sample_gate": {
+    "required_before_publish": true,
+    "checks": [
+      "identity_matches_listing",
+      "materials_and_finish_verified",
+      "dimensions_verified",
+      "packaging_verified",
+      "delivery_tracking_tested",
+      "damage_and_defect_risk_reviewed",
+      "return_flow_tested_or_contractually_verified",
+      "original_photography_available",
+      "claims_supported"
+    ]
+  },
+  "listing_draft_required_fields": [
+    "internal_sku",
+    "title",
+    "one_sentence_benefit",
+    "description",
+    "what_is_included",
+    "materials",
+    "dimensions",
+    "care",
+    "verified_claims",
+    "delivery_range",
+    "return_summary",
+    "product_type",
+    "room_or_use_case",
+    "supplier",
+    "fulfillment_model",
+    "unit_cost",
+    "price",
+    "variable_fulfillment_cost",
+    "payment_fee_estimate",
+    "return_reserve",
+    "contribution_per_order_estimate",
+    "primary_image",
+    "detail_image",
+    "scale_image",
+    "in_use_image"
+  ],
+  "publish_additional_required_fields": [
+    "shopify_product_gid",
+    "shopify_variant_gids"
+  ],
+  "prohibited_content": [
+    "fabricated_rating",
+    "fabricated_review_count",
+    "fabricated_bought_count",
+    "fabricated_compare_at_price",
+    "unsupported_sustainability_claim",
+    "unsupported_certification",
+    "unsupported_shipping_promise",
+    "fake_scarcity",
+    "fake_trending_or_hot_badge",
+    "supplier_copy_published_without_review"
+  ],
+  "analytics_join_keys": [
+    "shopify_product_gid",
+    "shopify_variant_gid",
+    "internal_sku",
+    "merchandising_decision_id",
+    "first_party_session_id",
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_content"
+  ],
+  "storefront_events": [
+    "product_impression",
+    "view_item",
+    "select_item",
+    "add_to_cart",
+    "remove_from_cart",
+    "view_cart",
+    "begin_checkout",
+    "checkout_redirect"
+  ],
+  "shopify_webhook_events": [
+    "products_create",
+    "products_update",
+    "products_delete",
+    "inventory_levels_update",
+    "orders_paid",
+    "refunds_create",
+    "fulfillments_create"
+  ],
+  "privacy": {
+    "storefront_analytics_excludes": [
+      "email",
+      "name",
+      "street_address",
+      "phone",
+      "full_ip",
+      "payment_data"
+    ],
+    "order_webhooks_are_server_only": true,
+    "customer_identity_uploaded_to_pinterest": false
+  },
+  "shopify_access_provisioning": {
+    "requires_explicit_approval": true,
+    "least_privilege_required": true,
+    "credentials_server_side_only": true,
+    "credential_values_must_not_be_logged": true,
+    "verification": [
+      "approved_store_identity_confirmed",
+      "granted_scopes_recorded_by_name_only",
+      "read_only_shop_query_succeeds",
+      "read_only_product_query_succeeds",
+      "no_write_mutation_executed"
+    ]
+  },
+  "merchandising": {
+    "evaluation_schedule": "daily",
+    "default_evaluation_window_days": 14,
+    "comparison_window_days": 28,
+    "minimum_days_between_non_emergency_live_reorders": 7,
+    "output_mode": "recommendation_with_no_change",
+    "ranking_factors": {
+      "contribution_per_eligible_product_view": 0.3,
+      "conversion_confidence_lower_bound": 0.2,
+      "sales_velocity_vs_baseline": 0.15,
+      "fulfillment_reliability": 0.1,
+      "inventory_health": 0.1,
+      "return_rate_penalty": 0.1,
+      "editorial_and_board_fit": 0.05
+    },
+    "slot_policy": {
+      "proven_share": 0.7,
+      "exploration_share": 0.2,
+      "editorial_share": 0.1,
+      "category_diversity_required": true,
+      "out_of_stock_excluded": true,
+      "unreliable_fulfillment_excluded": true
+    },
+    "minimum_samples": {
+      "product_detail_views": 100,
+      "paid_orders": 3
+    },
+    "trending_badge": {
+      "auto_publish": false,
+      "minimum_paid_orders_7d": 5,
+      "minimum_product_detail_views_7d": 200,
+      "minimum_velocity_multiple_vs_prior_28d_daily_average": 1.5,
+      "minimum_probability_velocity_above_baseline": 0.9,
+      "maximum_refund_rate": 0.15,
+      "inventory_and_fulfillment_guardrails_required": true,
+      "label_expiry_days": 7,
+      "immediate_removal_recommendation_triggers": [
+        "inventory_unavailable",
+        "fulfillment_sla_breach",
+        "refund_rate_above_threshold",
+        "safety_or_quality_incident",
+        "claim_evidence_invalidated"
+      ]
+    },
+    "feedback_loop_controls": [
+      "rank_by_exposure_normalized_metrics",
+      "reserve_exploration_slots",
+      "retain_editorial_slot",
+      "apply_minimum_sample_thresholds",
+      "require_badge_expiry_and_reapproval",
+      "record_every_decision",
+      "snapshot_current_merchandising_before_change",
+      "permit_no_change"
+    ]
+  },
+  "approval_required": [
+    "supplier_connection",
+    "supplier_outreach",
+    "supplier_contract",
+    "sample_purchase",
+    "purchase_order",
+    "product_create",
+    "product_update",
+    "product_publish",
+    "product_archive",
+    "price_change",
+    "compare_at_price_change",
+    "discount_change",
+    "inventory_adjustment",
+    "reorder",
+    "fulfillment_policy_change",
+    "return_policy_change",
+    "shipping_policy_change",
+    "collection_membership_change",
+    "badge_publish",
+    "homepage_or_above_fold_change",
+    "checkout_setting_change",
+    "shopify_app_install",
+    "api_scope_or_credential_change",
+    "webhook_subscription_change"
+  ],
+  "automatic_actions": [],
+  "decision_log_required": true,
+  "rollback_required": true
+}
