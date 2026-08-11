@@ -231,7 +231,13 @@
     "checkout_setting_change",
     "shopify_app_install",
     "api_scope_or_credential_change",
-    "webhook_subscription_change"
+    "webhook_subscription_change",
+    "repository_commit",
+    "repository_push",
+    "pull_request_create",
+    "production_merge",
+    "production_deploy",
+    "traffic_allocation_change"
   ],
   "automatic_actions": [],
   "decision_log_required": true,

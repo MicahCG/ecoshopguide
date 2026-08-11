@@ -47,7 +47,7 @@ npm run build
 npm run vercel-build
 ```
 
-`npm run check` has a known pre-existing baseline of 13 TypeScript errors in old database maintenance and seed scripts. Do not treat those as newly introduced without comparing the baseline. The baseline must be fixed before TypeScript can become a hard CI gate.
+`npm run check` passed on 2026-08-10 after the old database maintenance and seed scripts were repaired. Freshly run it for every change; any new TypeScript error is a release blocker.
 
 There is currently no automated test suite or GitHub Actions workflow. Do not claim tests passed when only the build passed.
 
@@ -142,7 +142,7 @@ As of 2026-08-10, verify these before relying on them:
 - the homepage uses several multi-megabyte PNG assets
 - `main` is not branch-protected
 - no GitHub Actions checks exist
-- `npm run check` has 13 pre-existing TypeScript errors
+- `npm run check` passed after maintenance and seed script repairs; keep it as a hard release gate
 - deployment and GA4 documentation is stale and contradictory
 
 Freshly verify each item before proposing remediation. Do not expose secret material while documenting findings.
