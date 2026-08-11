@@ -4,6 +4,7 @@ import { registerRoutes } from "../server/routes";
 import path from "path";
 
 const app = express();
+app.set("trust proxy", 1);
 
 declare module 'http' {
   interface IncomingMessage {
@@ -71,7 +72,7 @@ app.use((req, res, next) => {
     const duration = Date.now() - start;
     if (path.startsWith("/api")) {
       let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
+      if (capturedJsonResponse && !path.startsWith("/api/shopify/cart")) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
 

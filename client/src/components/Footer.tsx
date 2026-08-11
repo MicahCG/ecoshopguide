@@ -1,10 +1,10 @@
 import { Link } from 'wouter';
 
-export default function Footer() {
+export default function Footer({ showAffiliateDisclosure = true }: { showAffiliateDisclosure?: boolean }) {
   return (
     <footer className="border-t border-border bg-card" data-testid="footer">
       {/* ── Affiliate disclosure bar ── */}
-      <div className="bg-muted/40 border-b border-border/60">
+      {showAffiliateDisclosure && <div className="bg-muted/40 border-b border-border/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 text-center">
           <p className="text-xs text-muted-foreground leading-relaxed">
             <span className="font-semibold text-foreground">Affiliate Disclosure:</span>{' '}
@@ -18,7 +18,7 @@ export default function Footer() {
             </Link>
           </p>
         </div>
-      </div>
+      </div>}
 
       {/* ── Main footer grid ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
