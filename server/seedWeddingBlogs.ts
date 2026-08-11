@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { requireDb } from "./db";
 import { blogs } from "@shared/schema";
 
 const weddingBlogPosts = [
@@ -1056,8 +1056,9 @@ const weddingBlogPosts = [
 
 async function seedWeddingBlogs() {
   console.log("Seeding wedding blog posts...");
+  const db = requireDb();
   
-  let inserted = 0;
+  let upserted = 0;
   try {
     for (const post of weddingBlogPosts) {
       const result = await db.insert(blogs).values(post)
@@ -1071,16 +1072,15 @@ async function seedWeddingBlogs() {
             cta: post.cta,
             category: post.category,
           }
-        });
-      if (result.rowCount && result.rowCount > 0) {
-        console.log(`Inserted blog: ${post.title}`);
-        inserted++;
-      } else {
-        console.log(`Skipped (already exists): ${post.title}`);
+        })
+        .returning({ id: blogs.id });
+      if (result.length > 0) {
+        console.log(`Upserted blog: ${post.title}`);
+        upserted++;
       }
     }
     
-    console.log(`\nSuccessfully seeded ${inserted} new wedding blog posts! (${weddingBlogPosts.length - inserted} already existed)`);
+    console.log(`\nSuccessfully upserted ${upserted} wedding blog posts!`);
   } catch (error) {
     console.error("Error seeding wedding blogs:", error);
     throw error;

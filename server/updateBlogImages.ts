@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { requireDb } from "./db";
 import { blogs } from "@shared/schema";
 import { eq } from "drizzle-orm";
 
@@ -89,6 +89,7 @@ function getFeatureImage(slug: string, products: any): string {
 
 export async function updateBlogImagesAndCategories() {
   console.log("Starting blog image and category update...");
+  const db = requireDb();
   
   const allBlogs = await db.select().from(blogs);
   console.log(`Found ${allBlogs.length} blogs to update`);
