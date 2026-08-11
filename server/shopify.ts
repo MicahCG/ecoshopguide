@@ -1,6 +1,6 @@
 import { isIP } from "node:net";
 import { z } from "zod";
-import type { ShopifyCart, ShopifyCollection, ShopifyImage, ShopifyProduct, ShopifyReview } from "@shared/shopify";
+import type { ShopifyCart, ShopifyCollection, ShopifyImage, ShopifyProduct, ShopifyReview } from "../shared/shopify.js";
 
 const gid = (kind: string) => z.string().min(1).max(512).regex(new RegExp(`^gid://shopify/${kind}/[^\\s]+$`));
 export const cartIdSchema = gid("Cart");

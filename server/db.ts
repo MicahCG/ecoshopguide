@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import * as schema from "@shared/schema";
+import * as schema from "../shared/schema.js";
 
 // Make database connection optional to prevent serverless function crashes
 // Routes that need the database should check if db is available

@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { db, requireDb } from "./db";
-import { analyticsEvents, blogs, newsletterSubscribers } from "@shared/schema";
+import { db, requireDb } from "./db.js";
+import { analyticsEvents, blogs, newsletterSubscribers } from "../shared/schema.js";
 import { eq, desc, sql } from "drizzle-orm";
 import { Resend } from "resend";
 import { z } from "zod";
@@ -10,7 +10,7 @@ import {
   cartLineRemoveSchema, cartLineUpdateSchema, cartLinesAddSchema, createCart, getCart,
   getWeddingCollection, getWeddingProduct, handleSchema, removeCartLine, toPublicCart,
   updateCartAttributes, updateCartLine, validatedBuyerIp,
-} from "./shopify";
+} from "./shopify.js";
 
 // Initialize Resend for email
 const resend = process.env.RESEND_API_KEY
