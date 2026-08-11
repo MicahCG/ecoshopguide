@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { requireDb } from "./db";
 import { blogs } from "@shared/schema";
 import { eq } from "drizzle-orm";
 
@@ -69,6 +69,7 @@ const GLOBAL_IMAGE_REPLACEMENTS: Record<string, string> = {
 
 async function fixBlogImages() {
   console.log("Starting blog image audit and fix...\n");
+  const db = requireDb();
   
   const allBlogs = await db.select().from(blogs);
   let fixedCount = 0;

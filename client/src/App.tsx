@@ -24,6 +24,9 @@ import JungleSpaVibes from "@/pages/JungleSpaVibes";
 import CozyDormRoom from "@/pages/CozyDormRoom";
 import NotFound from "@/pages/not-found";
 import NewsletterPopup from "@/components/NewsletterPopup";
+import WeddingCollection from "@/pages/WeddingCollection";
+import ShopifyProductPage from "@/pages/ShopifyProduct";
+import { ShopifyCartProvider } from "@/components/ShopifyCart";
 
 const BlogRedirect = () => <WouterRedirect to="/blog" />;
 
@@ -46,7 +49,10 @@ function Router() {
       <Route path="/pages/privacy-policy" component={PrivacyPolicy} />
       <Route path="/pages/terms-of-service" component={TermsOfService} />
       <Route path="/shop-the-look" component={ShopTheLook} />
+      <Route path="/shop-the-look/weddings" component={WeddingCollection} />
       <Route path="/shop-the-look/:category" component={IdeaListCategory} />
+      <Route path="/collections/wedding" component={WeddingCollection} />
+      <Route path="/products/:handle" component={ShopifyProductPage} />
       <Route path="/pages/dreamy-boho-garden-wedding" component={DreamyBohoGardenWedding} />
       <Route path="/pages/enchanted-forest-retreat" component={EnchantedForestRetreat} />
       <Route path="/pages/warm-boho-living-room" component={WarmBohoLivingRoom} />
@@ -76,12 +82,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <SiteAnalytics />
-        <ScrollToTop />
-        <Toaster />
-        <Router />
-        <NewsletterPopup />
-        <Analytics />
+        <ShopifyCartProvider>
+          <SiteAnalytics />
+          <ScrollToTop />
+          <Toaster />
+          <Router />
+          <NewsletterPopup />
+          <Analytics />
+        </ShopifyCartProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

@@ -5,6 +5,7 @@ import { setupVite, serveStatic, log } from "./vite";
 import path from "path";
 
 const app = express();
+app.set("trust proxy", 1);
 
 declare module 'http' {
   interface IncomingMessage {
@@ -83,6 +84,9 @@ app.use((req, res, next) => {
     '/static/',                   // Static files
     '/blog/',                     // Blog posts
     '/pages/',                    // Static pages (about, privacy, etc.)
+    '/shop-the-look',             // Curated commerce routes
+    '/collections/',              // Shopify collection aliases
+    '/products/',                 // Shopify Wedding products
     '/@',                         // Vite dev server assets (e.g. /@vite/, /@react-refresh)
   ];
   
@@ -122,7 +126,7 @@ app.use((req, res, next) => {
     const duration = Date.now() - start;
     if (path.startsWith("/api")) {
       let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
+      if (capturedJsonResponse && !path.startsWith("/api/shopify/cart")) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
 
