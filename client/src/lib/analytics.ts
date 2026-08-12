@@ -1,11 +1,5 @@
 declare global {
   interface Window {
-    gtag: (
-      command: 'event' | 'config' | 'js',
-      action: string,
-      params?: Record<string, unknown>
-    ) => void;
-    dataLayer: unknown[];
     __ecoEventLog: Array<{ ts: number; eventName: string; params: Record<string, unknown> }>;
     ecoDumpEvents: () => void;
   }
@@ -69,16 +63,6 @@ function getAttributionParams(): Record<string, string> {
   };
 }
 
-function getSessionId(): string {
-  const key = 'eco_analytics_session_id';
-  let sessionId = sessionStorage.getItem(key);
-  if (!sessionId) {
-    sessionId = crypto.randomUUID();
-    sessionStorage.setItem(key, sessionId);
-  }
-  return sessionId;
-}
-
 function analyticsMetadata(params: Record<string, unknown>): Record<string, string | number | boolean> {
   return Object.fromEntries(
     Object.entries(params)
@@ -86,29 +70,6 @@ function analyticsMetadata(params: Record<string, unknown>): Record<string, stri
       .map(([key, value]) => [key, typeof value === 'string' ? value.slice(0, 255) : value as number | boolean])
       .slice(0, 12),
   );
-}
-
-function sendFirstPartyEvent(eventName: string, params: Record<string, unknown>): void {
-  if (typeof window === 'undefined') return;
-
-  const body = JSON.stringify({
-    sessionId: getSessionId(),
-    eventName,
-    pagePath: params.page_path,
-    referrerDomain: params.referrer_domain,
-    utmSource: params.utm_source,
-    utmMedium: params.utm_medium,
-    utmCampaign: params.utm_campaign,
-    utmContent: params.utm_content,
-    metadata: analyticsMetadata(params),
-  });
-
-  fetch('/api/analytics/events', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body,
-    keepalive: true,
-  }).catch(() => undefined);
 }
 
 function addToRingBuffer(eventName: string, params: Record<string, unknown>): void {
@@ -141,15 +102,10 @@ export function ecoTrack(eventName: string, params: Record<string, unknown> = {}
   };
 
   addToRingBuffer(eventName, fullParams);
-  sendFirstPartyEvent(eventName, fullParams);
   track(eventName, analyticsMetadata(fullParams));
 
   if (isDebugMode()) {
-    console.log('[GA4]', eventName, fullParams);
-  }
-
-  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-    window.gtag('event', eventName, fullParams);
+    console.log('[analytics]', eventName, fullParams);
   }
 }
 
@@ -161,17 +117,3 @@ export function initAnalytics(): void {
 }
 
 // Newsletter tracking
-export function trackNewsletterSignup(source: 'homepage_section' | 'exit_intent_popup'): void {
-  ecoTrack('newsletter_signup', {
-    signup_source: source,
-  });
-
-  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-    window.gtag('event', 'generate_lead', {
-      currency: 'USD',
-      value: 0.5,
-      signup_source: source,
-      ...getAttributionParams(),
-    });
-  }
-}

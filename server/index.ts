@@ -70,7 +70,6 @@ app.use((req, res, next) => {
 
   const validPaths = [
     '/',                          // Homepage
-    '/blog',                      // Blog list
     '/favicon.ico',               // Favicon
     '/robots.txt',                // Robots file
     '/sitemap.xml',               // Sitemap
@@ -82,7 +81,6 @@ app.use((req, res, next) => {
     '/attached_assets/',          // Static assets
     '/assets/',                   // Vite built assets
     '/static/',                   // Static files
-    '/blog/',                     // Blog posts
     '/pages/',                    // Static pages (about, privacy, etc.)
     '/shop-the-look',             // Curated commerce routes
     '/collections/',              // Shopify collection aliases

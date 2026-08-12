@@ -7,8 +7,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import SiteAnalytics from "@/components/GoogleAnalytics";
 import Home from "@/pages/Home";
-import BlogList from "@/pages/BlogList";
-import BlogPost from "@/pages/BlogPost";
 import AboutUs from "@/pages/AboutUs";
 import Contact from "@/pages/Contact";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
@@ -23,12 +21,11 @@ import JungleSpaRetreat from "@/pages/JungleSpaRetreat";
 import JungleSpaVibes from "@/pages/JungleSpaVibes";
 import CozyDormRoom from "@/pages/CozyDormRoom";
 import NotFound from "@/pages/not-found";
-import NewsletterPopup from "@/components/NewsletterPopup";
 import WeddingCollection from "@/pages/WeddingCollection";
 import ShopifyProductPage from "@/pages/ShopifyProduct";
 import { ShopifyCartProvider } from "@/components/ShopifyCart";
 
-const BlogRedirect = () => <WouterRedirect to="/blog" />;
+const StorefrontRedirect = () => <WouterRedirect to="/shop-the-look" />;
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -42,8 +39,8 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/blog" component={BlogList} />
-      <Route path="/blog/:slug" component={BlogPost} />
+      <Route path="/blog" component={StorefrontRedirect} />
+      <Route path="/blog/:slug" component={StorefrontRedirect} />
       <Route path="/pages/about" component={AboutUs} />
       <Route path="/pages/contact" component={Contact} />
       <Route path="/pages/privacy-policy" component={PrivacyPolicy} />
@@ -61,18 +58,16 @@ function Router() {
       <Route path="/pages/jungle-spa-vibes" component={JungleSpaVibes} />
       <Route path="/pages/cozy-dorm-room" component={CozyDormRoom} />
       {/* Legacy redirects */}
-      <Route path="/shop" component={BlogRedirect} />
-      <Route path="/shop/:rest*" component={BlogRedirect} />
-      <Route path="/products" component={BlogRedirect} />
-      <Route path="/products/:rest*" component={BlogRedirect} />
-      <Route path="/collections" component={BlogRedirect} />
-      <Route path="/collections/:rest*" component={BlogRedirect} />
-      <Route path="/wellness" component={BlogRedirect} />
-      <Route path="/wellness/:rest*" component={BlogRedirect} />
-      <Route path="/bedroom" component={BlogRedirect} />
-      <Route path="/bedroom/:rest*" component={BlogRedirect} />
-      <Route path="/category" component={BlogRedirect} />
-      <Route path="/category/:rest*" component={BlogRedirect} />
+      <Route path="/shop" component={StorefrontRedirect} />
+      <Route path="/shop/:rest*" component={StorefrontRedirect} />
+      <Route path="/products" component={StorefrontRedirect} />
+      <Route path="/collections" component={StorefrontRedirect} />
+      <Route path="/wellness" component={StorefrontRedirect} />
+      <Route path="/wellness/:rest*" component={StorefrontRedirect} />
+      <Route path="/bedroom" component={StorefrontRedirect} />
+      <Route path="/bedroom/:rest*" component={StorefrontRedirect} />
+      <Route path="/category" component={StorefrontRedirect} />
+      <Route path="/category/:rest*" component={StorefrontRedirect} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -87,7 +82,6 @@ function App() {
           <ScrollToTop />
           <Toaster />
           <Router />
-          <NewsletterPopup />
           <Analytics />
         </ShopifyCartProvider>
       </TooltipProvider>

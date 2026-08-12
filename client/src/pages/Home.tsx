@@ -1,23 +1,19 @@
-import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { ArrowRight, Star } from "lucide-react";
-import type { Blog } from "@shared/schema";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AffiliateDisclosure from "@/components/AffiliateDisclosure";
-import NewsletterSection from "@/components/NewsletterSection";
 import {
   IDEA_LIST_CATEGORIES,
   sectionId,
   type IdeaListCategory,
   type IdeaProduct,
 } from "@/data/ideaLists";
-import { getFeatureImage, getCategoryDisplay } from "./BlogList";
 
 /**
  * Home page, rebuilt from the design reference "EcoShopGuide Storefront.dc.html"
  * (variant A — editorial-first): hero → category rail → "Why we picked it" →
- * product grid → latest articles.
+ * product grid.
  *
  * The reference is modelled as a Shopify storefront (cart drawer, checkout,
  * split-shipment notices). We're an affiliate guide, so every "Add to cart"
@@ -195,55 +191,9 @@ function ProductCard({
   );
 }
 
-function BlogCard({ blog }: { blog: Blog }) {
-  return (
-    <Link href={`/blog/${blog.slug}`}>
-      <article className="group cursor-pointer" data-testid={`blog-card-${blog.slug}`}>
-        <div className="overflow-hidden rounded-[10px] border border-[var(--esg-sand)] bg-[var(--esg-clay)]">
-          <img
-            src={getFeatureImage(blog)}
-            alt={blog.title}
-            loading="lazy"
-            className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        </div>
-        <div className="mt-2.5">
-          <Eyebrow tone="accent">{getCategoryDisplay(blog.category)}</Eyebrow>
-          <h3 className="esg-serif mt-1.5 text-lg leading-snug line-clamp-2 transition-colors group-hover:text-[var(--esg-terracotta)]">
-            {blog.title}
-          </h3>
-        </div>
-      </article>
-    </Link>
-  );
-}
-
-function SkeletonBlogCard() {
-  return (
-    <div className="animate-pulse">
-      <div className="aspect-[4/3] rounded-[10px] bg-[var(--esg-clay)]" />
-      <div className="mt-3 h-2.5 w-20 rounded bg-[var(--esg-clay)]" />
-      <div className="mt-2.5 h-4 w-full rounded bg-[var(--esg-clay)]" />
-      <div className="mt-1.5 h-4 w-3/4 rounded bg-[var(--esg-clay)]" />
-    </div>
-  );
-}
-
 /* ──────────────────────────────  Page  ──────────────────────────────────── */
 
 export default function Home() {
-  const { data: blogs = [], isLoading } = useQuery<Blog[]>({
-    queryKey: ["/api/blogs"],
-  });
-
-  const latest = [...blogs]
-    .sort((a, b) => {
-      if (a.featured && !b.featured) return -1;
-      if (!a.featured && b.featured) return 1;
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    })
-    .slice(0, 3);
-
   return (
     <div className="esg-home flex min-h-screen flex-col">
       <Header />
@@ -384,33 +334,6 @@ export default function Home() {
           </section>
         )}
 
-        {/* ── Latest articles ── */}
-        <section className="mt-10 border-y border-[var(--esg-sand)] bg-[var(--esg-surface)] py-8 md:mt-16 md:py-14">
-          <div className="mx-auto max-w-6xl px-4 md:px-6">
-            <div className="flex items-baseline justify-between gap-4">
-              <div>
-                <Eyebrow>Reading</Eyebrow>
-                <h2 className="esg-serif mt-2 text-2xl md:text-[32px]">
-                  Latest from the blog
-                </h2>
-              </div>
-              <Link href="/blog">
-                <span className="inline-flex shrink-0 cursor-pointer items-center gap-1 text-sm font-medium transition-colors hover:text-[var(--esg-terracotta)]">
-                  All articles
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </span>
-              </Link>
-            </div>
-
-            <div className="mt-5 grid grid-cols-1 gap-x-5 gap-y-7 sm:grid-cols-2 md:mt-8 md:grid-cols-3">
-              {isLoading
-                ? Array.from({ length: 3 }).map((_, i) => <SkeletonBlogCard key={i} />)
-                : latest.map((blog) => <BlogCard key={blog.id} blog={blog} />)}
-            </div>
-          </div>
-        </section>
-
-        <NewsletterSection />
       </main>
 
       <Footer />

@@ -57,16 +57,6 @@ export default function Footer({ showAffiliateDisclosure = true }: { showAffilia
                 </Link>
               </li>
               <li>
-                <Link href="/blog">
-                  <span
-                    className="text-muted-foreground hover:text-primary transition-colors cursor-pointer"
-                    data-testid="link-blog"
-                  >
-                    Blog
-                  </span>
-                </Link>
-              </li>
-              <li>
                 <Link href="/shop-the-look">
                   <span
                     className="text-muted-foreground hover:text-primary transition-colors cursor-pointer"
