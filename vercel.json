@@ -2,6 +2,8 @@
   "buildCommand": "npm run vercel-build",
   "outputDirectory": "dist/public",
   "rewrites": [
+    { "source": "/api/shopify-theme-design", "destination": "/api/shopify-theme-design-handler" },
+    { "source": "/api/shopify-fall-collection", "destination": "/api/shopify-fall-collection-handler" },
     { "source": "/sitemap.xml", "destination": "/api/sitemap" },
     { "source": "/api/sitemap.xml", "destination": "/api/sitemap" },
     { "source": "/api/products/:productId/reviews", "destination": "/api/reviews?productId=:productId" },
