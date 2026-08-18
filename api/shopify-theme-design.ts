@@ -269,6 +269,16 @@ body.template-collection :is(.product-grid,.collection-product-grid,#product-gri
 body.template-collection :is(.card,.product-card) { border-radius: 16px; }
 body.template-collection :is(.card__content,.product-card__content) { padding: .75rem !important; }
 body.template-collection :is(.card__heading,.card-title,.product-card__title) { font-size: .96rem !important; line-height: 1.25 !important; }
+/* Supplier titles can be very long. Keep every product card scannable and aligned. */
+body.template-collection :is(.card__heading,.card__heading a,.card-title,.card-title a,.card__title,.card__title a,.product-card__title,.product-card__title a,.product-title,.product-title a,.product-item__title,.product-item__title a) {
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
+  overflow: hidden !important;
+  min-block-size: 2.5em !important;
+  max-block-size: 2.5em !important;
+}
 body.template-collection :is(.card__information,.card-information,.product-card__meta) { gap: .25rem !important; }
 @media(max-width:989px) {
   body.template-collection :is(.product-grid,.collection-product-grid,#product-grid) { grid-template-columns: repeat(3,minmax(0,1fr)) !important; }
@@ -286,6 +296,10 @@ body.template-collection :is(.card__information,.card-information,.product-card_
   body.template-collection :is(.product-grid,.collection-product-grid,#product-grid) { grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: .65rem !important; }
   body.template-collection :is(.card__content,.product-card__content) { padding: .6rem !important; }
   body.template-collection :is(.card__heading,.card-title,.product-card__title) { font-size: .87rem !important; line-height: 1.22 !important; }
+  body.template-collection :is(.card__heading,.card__heading a,.card-title,.card-title a,.card__title,.card__title a,.product-card__title,.product-card__title a,.product-title,.product-title a,.product-item__title,.product-item__title a) {
+    min-block-size: 2.56em !important;
+    max-block-size: 2.56em !important;
+  }
 }
 @media (max-width: 749px) {
   body { font-size: 16px; }
