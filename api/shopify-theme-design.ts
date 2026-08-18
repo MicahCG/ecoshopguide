@@ -32,7 +32,7 @@ const HOME_SECTION = `{% comment %} ${HOME_MARKER} {% endcomment %}
       <h1 id="ecg-home-title">Make your space feel like you.</h1>
       <p class="ecg-home-hero__body">Curated finds for dorm move-in and the cozy, seasonal moments that make a room feel finished.</p>
       <div class="ecg-home-hero__actions">
-        <a class="ecg-cta ecg-cta--primary" href="/collections/dorm">Shop Dorm Decor</a>
+        <a class="ecg-cta ecg-cta--primary" href="/collections/dorm-decor">Shop Dorm Decor</a>
         <a class="ecg-cta ecg-cta--secondary" href="/collections/fall-halloween">Shop Fall &amp; Halloween</a>
       </div>
       <ul class="ecg-trust-list" role="list">
@@ -63,7 +63,7 @@ const COLLECTION_SECTION = `{% comment %} ${COLLECTION_MARKER} {% endcomment %}
   assign ecg_title = collection.title
   assign ecg_copy = collection.description | strip_html
   assign ecg_note = 'Thoughtfully collected for the way you live.'
-  if ecg_handle == 'dorm'
+  if ecg_handle == 'dorm-decor'
     assign ecg_eyebrow = 'Move-in, made easy'
     assign ecg_title = 'Dorm Decor'
     assign ecg_copy = 'Small-space essentials for a room that feels like home from day one.'
@@ -94,7 +94,7 @@ const COLLECTION_SECTION = `{% comment %} ${COLLECTION_MARKER} {% endcomment %}
 </section>
 {% schema %}
 {
-  "name": "EcoShopGuide collection hero",
+  "name": "Collection hero",
   "tag": "section",
   "class": "ecg-collection-hero-section",
   "settings": []
@@ -595,43 +595,62 @@ export default async function handler(request: any, response: any) {
       updatedCollectionTemplate = buildLegacyCollectionTemplate(collectionLiquidTemplate);
     }
 
-    const result = await shopifyAdminRequest<{
+    type ThemeFilesUpsertResponse = {
       themeFilesUpsert: {
         upsertedThemeFiles: Array<{ filename: string }>;
         job?: { id: string } | null;
         userErrors: Array<{ message: string }>;
       };
-    }>(
-      `mutation StoreManagerPremiumStyles($themeId: ID!, $files: [OnlineStoreThemeFilesUpsertFileInput!]!) {
+    };
+
+    const upsertThemeFiles = async (
+      files: Array<{ filename: string; body: ReturnType<typeof textBody> }>,
+      label: string,
+    ) => {
+      const result = await shopifyAdminRequest<ThemeFilesUpsertResponse>(
+        `mutation StoreManagerPremiumStyles($themeId: ID!, $files: [OnlineStoreThemeFilesUpsertFileInput!]!) {
         themeFilesUpsert(themeId: $themeId, files: $files) {
           upsertedThemeFiles { filename }
           job { id }
           userErrors { message }
         }
       }`,
-      {
-        themeId: theme.id,
-        files: [
-          { filename: `assets/${PREMIUM_STYLESHEET}`, body: textBody(PREMIUM_CSS) },
-          { filename: "layout/theme.liquid", body: textBody(updatedLayout) },
-          { filename: HOME_SECTION_FILENAME, body: textBody(HOME_SECTION) },
-          { filename: templateFilename, body: textBody(updatedTemplate) },
-          { filename: COLLECTION_SECTION_FILENAME, body: textBody(COLLECTION_SECTION) },
-          {
-            filename: collectionTemplateFilename,
-            body: textBody(updatedCollectionTemplate),
-          },
-        ],
-      },
-    );
-    const errorMessages = result.themeFilesUpsert.userErrors
-      .map(({ message }) => message.trim())
-      .filter(Boolean);
-    if (errorMessages.length) {
-      throw new ShopifyAdminRequestError(
-        `Shopify rejected the theme update: ${errorMessages.join(" ")}`,
+        { themeId: theme.id, files },
       );
-    }
+
+      const errorMessages = result.themeFilesUpsert.userErrors
+        .map(({ message }) => message.trim())
+        .filter(Boolean);
+      if (errorMessages.length) {
+        throw new ShopifyAdminRequestError(
+          `Shopify rejected the theme ${label} update: ${errorMessages.join(" ")}`,
+        );
+      }
+
+      return result.themeFilesUpsert;
+    };
+
+    // Shopify validates JSON templates against the sections already present in the
+    // theme. Upload the section definitions before the templates that reference them.
+    const foundationUpdate = await upsertThemeFiles(
+      [
+        { filename: `assets/${PREMIUM_STYLESHEET}`, body: textBody(PREMIUM_CSS) },
+        { filename: "layout/theme.liquid", body: textBody(updatedLayout) },
+        { filename: HOME_SECTION_FILENAME, body: textBody(HOME_SECTION) },
+        { filename: COLLECTION_SECTION_FILENAME, body: textBody(COLLECTION_SECTION) },
+      ],
+      "foundation",
+    );
+    const templateUpdate = await upsertThemeFiles(
+      [
+        { filename: templateFilename, body: textBody(updatedTemplate) },
+        {
+          filename: collectionTemplateFilename,
+          body: textBody(updatedCollectionTemplate),
+        },
+      ],
+      "template",
+    );
 
     // Read the layout back from Shopify. `themeFilesUpsert` can acknowledge an
     // update before the storefront CDN has refreshed, so this confirms that the
@@ -736,13 +755,16 @@ export default async function handler(request: any, response: any) {
         name: candidate.name,
         role: candidate.role,
       })),
-      updatedFiles: result.themeFilesUpsert.upsertedThemeFiles.map((file) => file.filename),
+      updatedFiles: [
+        ...foundationUpdate.upsertedThemeFiles,
+        ...templateUpdate.upsertedThemeFiles,
+      ].map((file) => file.filename),
       homepageTemplate: { filename: templateFilename, format: templateFormat },
       collectionTemplate: {
         filename: collectionTemplateFilename,
         format: collectionTemplateFormat,
       },
-      jobId: result.themeFilesUpsert.job?.id ?? null,
+      jobId: templateUpdate.job?.id ?? foundationUpdate.job?.id ?? null,
       verification,
       layoutDiagnostics,
     });
