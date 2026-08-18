@@ -624,8 +624,14 @@ export default async function handler(request: any, response: any) {
         ],
       },
     );
-    const errors = result.themeFilesUpsert.userErrors;
-    if (errors.length) throw new ShopifyAdminRequestError("Shopify rejected the theme update.");
+    const errorMessages = result.themeFilesUpsert.userErrors
+      .map(({ message }) => message.trim())
+      .filter(Boolean);
+    if (errorMessages.length) {
+      throw new ShopifyAdminRequestError(
+        `Shopify rejected the theme update: ${errorMessages.join(" ")}`,
+      );
+    }
 
     // Read the layout back from Shopify. `themeFilesUpsert` can acknowledge an
     // update before the storefront CDN has refreshed, so this confirms that the
