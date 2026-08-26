@@ -670,15 +670,22 @@ export default async function handler(request: any, response: any) {
           const content = existing.theme?.files?.nodes[0]?.body?.content ?? "";
           const markerIndex = content.indexOf(RATING_MARKER);
           const esgIndex = content.indexOf("esg-card-body");
+          const cardIndex = content.indexOf('<article class="esg-card"');
           inspection[filename] = {
             found: Boolean(content),
             hasEsgMarkup: esgIndex >= 0,
             hasRatingMarker: markerIndex >= 0,
             usesProductLoop: content.includes("for product in"),
+            markerNearCards:
+              markerIndex >= 0 &&
+              cardIndex >= 0 &&
+              Math.abs(markerIndex - cardIndex) < 4000,
             preview:
-              esgIndex >= 0
-                ? content.slice(Math.max(0, esgIndex - 120), esgIndex + 420)
-                : content.slice(0, 420),
+              cardIndex >= 0
+                ? content.slice(Math.max(0, cardIndex - 40), cardIndex + 520)
+                : esgIndex >= 0
+                  ? content.slice(Math.max(0, esgIndex - 120), esgIndex + 420)
+                  : content.slice(0, 420),
           };
         } catch (error) {
           inspection[filename] = {

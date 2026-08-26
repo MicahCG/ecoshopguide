@@ -26,6 +26,19 @@ test("does not inject ratings into esg css-only strings", () => {
   assert.equal(patchEsgCardMarkup(cssOnly), cssOnly);
 });
 
+test("reinserts ratings beside cards after removing css-block marker", () => {
+  const mixed =
+    `<style>.esg-card-body{padding:16px}.esg-price{font-weight:700}` +
+    `{% comment %} ${RATING_MARKER} {% endcomment %}` +
+    `{% render 'ecg-product-rating', product: product %}` +
+    `</style>` +
+    `<article class="esg-card"><div class="esg-card-body"><h4>{{ product.title }}</h4><div class="esg-price">{{ product.price | money }}</div></article>`;
+  const patched = patchEsgCardMarkup(mixed);
+  const styleBlock = patched.match(/<style[^>]*>[\s\S]*?<\/style>/i)?.[0] ?? "";
+  assert.doesNotMatch(styleBlock, /ecg-product-rating/);
+  assert.match(patched, /<h4>\{\{ product\.title \}\}<\/h4>\s*\{% comment %\}/);
+});
+
 test("removes misplaced rating renders from css-only strings", () => {
   const cssOnly =
     `<style>.esg-card-body{padding:16px}` +

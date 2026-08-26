@@ -104,6 +104,15 @@ export function patchThemeSnippet(content: string, renderLine: string): string {
   return `${content.trimEnd()}\n${renderLine}`;
 }
 
+const RATING_RENDER_RE =
+  /\{%\s*comment\s*%\}\s*EcoShopGuide product rating\s*\{%\s*endcomment\s*%\}\s*\{%\s*render\s+'ecg-product-rating'[^%]*%\}\s*/g;
+
+function stripRatingRendersFromStyleBlocks(content: string) {
+  return content.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, (block) =>
+    block.replace(RATING_RENDER_RE, ""),
+  );
+}
+
 function isEsgCardHtml(content: string) {
   return (
     content.includes('class="esg-card"') ||
@@ -115,31 +124,24 @@ function isEsgCardHtml(content: string) {
 }
 
 export function stripMisplacedEsgRatingPatch(content: string) {
-  if (isEsgCardHtml(content) || !content.includes(RATING_MARKER)) {
+  if (!content.includes(RATING_MARKER)) {
     return content;
   }
-  return content.replace(
-    /\{%\s*comment\s*%\}\s*EcoShopGuide product rating\s*\{%\s*endcomment\s*%\}\s*\{%\s*render\s+'ecg-product-rating'[^%]*%\}\s*/g,
-    "",
-  );
+  return content.replace(RATING_RENDER_RE, "");
 }
 
 export function patchEsgCardMarkup(content: string): string {
-  content = stripMisplacedEsgRatingPatch(content);
+  content = stripRatingRendersFromStyleBlocks(content);
   if (!isEsgCardHtml(content) || !content.includes("esg-price")) {
-    return content;
+    return stripMisplacedEsgRatingPatch(content);
   }
 
   const renderLine =
     `{% comment %} ${RATING_MARKER} {% endcomment %}\n` +
     `{% render 'ecg-product-rating', product: product, card_product: card_product %}\n`;
 
-  if (content.includes(RATING_MARKER)) {
-    return content.replace(
-      /\{%\s*comment\s*%\}\s*EcoShopGuide product rating\s*\{%\s*endcomment\s*%\}\s*\{%\s*render\s+'ecg-product-rating'[^%]*%\}\s*/g,
-      renderLine,
-    );
-  }
+  // Always re-insert beside card prices so a prior bad patch in CSS cannot block HTML.
+  content = content.replace(RATING_RENDER_RE, "");
 
   const patterns = [
     /(<div class="esg-card-body">\s*<h4>[\s\S]*?<\/h4>)(\s*<div class="esg-price">)/g,
