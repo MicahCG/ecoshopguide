@@ -65,6 +65,7 @@ export type NewsletterSubscriber = typeof newsletterSubscribers.$inferSelect;
 // omit IP addresses, user agents, email addresses, and full referrer URLs.
 export const analyticsEvents = pgTable("analytics_events", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  eventId: varchar("event_id", { length: 160 }).notNull().unique(),
   sessionId: varchar("session_id", { length: 64 }).notNull(),
   eventName: varchar("event_name", { length: 80 }).notNull(),
   pagePath: text("page_path").notNull(),
