@@ -110,7 +110,7 @@ function isEsgCardHtml(content: string) {
     content.includes('class=\\"esg-card\\"') ||
     content.includes("<article class=\"esg-card\">") ||
     content.includes("<div class=\"esg-card-body\">") ||
-    content.includes("<div class=\\"esg-card-body\\">")
+    content.includes('<div class=\\"esg-card-body\\">')
   );
 }
 
