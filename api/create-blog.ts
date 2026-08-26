@@ -1,12 +1,11 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import postgres from 'postgres';
 
 // Simple API key auth for automated blog publishing
 const API_KEY = process.env.BLOG_API_KEY;
 
 export default async function handler(
-  request: VercelRequest,
-  response: VercelResponse,
+  request: any,
+  response: any,
 ) {
   // Set CORS headers
   response.setHeader('Access-Control-Allow-Origin', '*');

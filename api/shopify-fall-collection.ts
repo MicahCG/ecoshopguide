@@ -111,17 +111,15 @@ export default async function handler(request: any, response: any) {
 
     const currentProductIds = new Set(collection.products?.nodes.map((product) => product.id) ?? []);
     const selected = FALL_SHORTLIST.map((item) => ({
-      label: item.label,
+      label: item.label as string,
       product: findProduct(data.products.nodes, item.phrases),
     }));
-    const additions = selected
-      .filter((item): item is { label: string; product: Product } =>
-        Boolean(item.product && !currentProductIds.has(item.product.id)),
-      )
-      .map((item) => item.product);
+    const additions = selected.flatMap((item) =>
+      item.product && !currentProductIds.has(item.product.id) ? [item.product] : [],
+    );
     const removals = data.products.nodes.filter(
       (product) =>
-        FALL_REMOVE_HANDLES.includes(product.handle as (typeof FALL_REMOVE_HANDLES)[number]) &&
+        (FALL_REMOVE_HANDLES as readonly string[]).includes(product.handle) &&
         currentProductIds.has(product.id),
     );
 
@@ -164,7 +162,11 @@ export default async function handler(request: any, response: any) {
       removed: removals.map((product) => ({ title: product.title, handle: product.handle })),
       alreadyPresent: selected
         .filter((item) => item.product && currentProductIds.has(item.product.id))
-        .map((item) => ({ label: item.label, title: item.product?.title, handle: item.product?.handle })),
+        .map((item) => ({
+          label: item.label,
+          title: item.product!.title,
+          handle: item.product!.handle,
+        })),
       missing: selected.filter((item) => !item.product).map((item) => item.label),
     });
   } catch (error) {

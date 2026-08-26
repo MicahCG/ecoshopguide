@@ -1,4 +1,4 @@
-import type { ShopifyReview } from "./shopify";
+import type { ShopifyReview } from "./shopify.js";
 
 export type VerifiedCollectiveDetail = {
   review: ShopifyReview;

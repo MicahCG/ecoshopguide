@@ -1,9 +1,8 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import postgres from 'postgres';
 
 export default async function handler(
-  request: VercelRequest,
-  response: VercelResponse,
+  request: any,
+  response: any,
 ) {
   // Set CORS headers
   response.setHeader('Access-Control-Allow-Origin', '*');
