@@ -280,6 +280,15 @@ body.template-collection :is(.card__heading,.card__heading a,.card-title,.card-t
   max-block-size: 2.5em !important;
 }
 body.template-collection :is(.card__information,.card-information,.product-card__meta) { gap: .25rem !important; }
+.ecg-product-rating {
+  margin: 0.15rem 0 0.35rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ecg-forest, #245442);
+}
+body.template-collection .ecg-product-rating { font-size: 0.82rem; }
+body.template-product .ecg-product-rating { margin-top: 0.35rem; font-size: 0.92rem; }
 @media(max-width:989px) {
   body.template-collection :is(.product-grid,.collection-product-grid,#product-grid) { grid-template-columns: repeat(3,minmax(0,1fr)) !important; }
   .ecg-collection-hero { grid-template-columns: 1fr minmax(13rem,.8fr); }

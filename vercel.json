@@ -4,6 +4,7 @@
   "rewrites": [
     { "source": "/api/shopify-theme-design", "destination": "/api/shopify-theme-design-handler" },
     { "source": "/api/shopify-fall-collection", "destination": "/api/shopify-fall-collection-handler" },
+    { "source": "/api/shopify-sync-ratings", "destination": "/api/shopify-sync-ratings-handler" },
     { "source": "/sitemap.xml", "destination": "/api/sitemap" },
     { "source": "/api/sitemap.xml", "destination": "/api/sitemap" },
     { "source": "/api/products/:productId/reviews", "destination": "/api/reviews?productId=:productId" },

@@ -10,6 +10,7 @@ import {
   type ShopifyReview,
   type SupportedCollectionHandle,
 } from "../shared/shopify.js";
+import { VERIFIED_COLLECTIVE_DETAILS } from "../shared/verified-collective-ratings.js";
 
 const gid = (kind: string) => z.string().min(1).max(512).regex(new RegExp(`^gid://shopify/${kind}/[^\\s]+$`));
 export const cartIdSchema = gid("Cart");
@@ -70,32 +71,7 @@ function image(value: any): ShopifyImage | undefined {
 // synchronize them to imported product metafields. These are manually verified
 // supplier aggregates, keyed to a specific imported product, and intentionally
 // only added when an exact Collective listing has been supplied.
-const verifiedCollectiveDetails: Record<string, { review: ShopifyReview; supplierShipsInDays?: number }> = {
-  "classic-white-box-light-pink-roses": { review: { rating: 4.2, count: 15 }, supplierShipsInDays: 2 },
-  "7oz-posh™-candle-vessel-lid": { review: { rating: 5, count: 155 } },
-  // Verified in Shopify Collective on August 12, 2026. Collective does not
-  // copy these product ratings into Storefront API metafields when importing.
-  "10-faux-pale-pink-ranunculus-stem-bundle": { review: { rating: 5, count: 4 }, supplierShipsInDays: 2 },
-  "13-faux-blush-ranunculus-stem": { review: { rating: 5, count: 2 }, supplierShipsInDays: 2 },
-  "17-faux-anemone-white-stem": { review: { rating: 5, count: 3 }, supplierShipsInDays: 2 },
-  "geranium-rose-signature-candle": { review: { rating: 4.9, count: 12 } },
-  "forest-bathing-signature-candle-fir-pine-patchouli": { review: { rating: 5, count: 19 } },
-  // Fall & Halloween — verified in Shopify Collective on August 26, 2026.
-  "folk-copper": { review: { rating: 5, count: 3 }, supplierShipsInDays: 3 },
-  "hello-pumpkin-coir-doormat": { review: { rating: 5, count: 1 }, supplierShipsInDays: 7 },
-  "tache-fall-orange-farmhouse-super-soft-micro-fleece-plaid-patchwork-plush-lightweight-bed-throw-blanket-4021": {
-    review: { rating: 5, count: 6 },
-  },
-  "32-faux-bittersweet-stem": { review: { rating: 4.6, count: 7 } },
-  "28-faux-pine-cone-branch-stem": { review: { rating: 4.7, count: 3 } },
-  "27-faux-japanese-maple-leaf-stem": { review: { rating: 5, count: 7 } },
-  "14-faux-magnolia-leaf-stem": { review: { rating: 4.6, count: 10 } },
-  "autumn-in-the-holler-hand-poured-mountain-fall-candle": { review: { rating: 5, count: 2 } },
-  "obsessed-with-fall-candle": { review: { rating: 4.9, count: 11 } },
-  "tache-warm-colorful-thanksgiving-leaves-fall-foliage-tapestry-table-runners-11516": {
-    review: { rating: 5, count: 3 },
-  },
-};
+const verifiedCollectiveDetails = VERIFIED_COLLECTIVE_DETAILS;
 
 export function normalizeProduct(raw: any): ShopifyProduct {
   const verified = verifiedCollectiveDetails[raw.handle];
