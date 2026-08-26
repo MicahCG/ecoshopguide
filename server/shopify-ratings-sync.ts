@@ -104,8 +104,29 @@ export function patchThemeSnippet(content: string, renderLine: string): string {
   return `${content.trimEnd()}\n${renderLine}`;
 }
 
+function isEsgCardHtml(content: string) {
+  return (
+    content.includes('class="esg-card"') ||
+    content.includes('class=\\"esg-card\\"') ||
+    content.includes("<article class=\"esg-card\">") ||
+    content.includes("<div class=\"esg-card-body\">") ||
+    content.includes("<div class=\\"esg-card-body\\">")
+  );
+}
+
+export function stripMisplacedEsgRatingPatch(content: string) {
+  if (isEsgCardHtml(content) || !content.includes(RATING_MARKER)) {
+    return content;
+  }
+  return content.replace(
+    /\{%\s*comment\s*%\}\s*EcoShopGuide product rating\s*\{%\s*endcomment\s*%\}\s*\{%\s*render\s+'ecg-product-rating'[^%]*%\}\s*/g,
+    "",
+  );
+}
+
 export function patchEsgCardMarkup(content: string): string {
-  if (!content.includes("esg-card-body") || !content.includes("esg-price")) {
+  content = stripMisplacedEsgRatingPatch(content);
+  if (!isEsgCardHtml(content) || !content.includes("esg-price")) {
     return content;
   }
 
@@ -147,12 +168,9 @@ export function patchEsgCollectionTemplateJson(content: string): string {
 
   let changed = false;
   const patchValue = (value: unknown): unknown => {
-    if (
-      typeof value === "string" &&
-      value.includes("esg-card-body") &&
-      value.includes("esg-price")
-    ) {
-      const patched = patchEsgCardMarkup(value);
+    if (typeof value === "string" && value.includes("esg-price")) {
+      const cleaned = stripMisplacedEsgRatingPatch(value);
+      const patched = isEsgCardHtml(cleaned) ? patchEsgCardMarkup(cleaned) : cleaned;
       if (patched !== value) changed = true;
       return patched;
     }

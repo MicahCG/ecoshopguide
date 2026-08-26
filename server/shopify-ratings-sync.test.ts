@@ -21,6 +21,21 @@ test("patches card snippets once with the rating render marker", () => {
   assert.equal(refreshed, patched);
 });
 
+test("does not inject ratings into esg css-only strings", () => {
+  const cssOnly = `<style>.esg-card-body{padding:16px}.esg-price{font-weight:700}</style>`;
+  assert.equal(patchEsgCardMarkup(cssOnly), cssOnly);
+});
+
+test("removes misplaced rating renders from css-only strings", () => {
+  const cssOnly =
+    `<style>.esg-card-body{padding:16px}` +
+    `{% comment %} ${RATING_MARKER} {% endcomment %}` +
+    `{% render 'ecg-product-rating', product: product %}` +
+    `.esg-price{font-weight:700}</style>`;
+  const cleaned = patchEsgCardMarkup(cssOnly);
+  assert.doesNotMatch(cleaned, /ecg-product-rating/);
+});
+
 test("patches esg collection cards before price", () => {
   const original = `<article class="esg-card"><div class="esg-card-body"><h4>Stem</h4><div class="esg-price">$6.95</div></div></article>`;
   const patched = patchEsgCardMarkup(original);
