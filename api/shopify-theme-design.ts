@@ -655,6 +655,41 @@ export default async function handler(request: any, response: any) {
       return;
     }
 
+    if (request.query?.inspectEsg === "1") {
+      const theme = themes.themes.nodes.find((candidate) => candidate.role === "MAIN");
+      if (!theme) {
+        throw new ShopifyAdminRequestError("No published Shopify theme was found.");
+      }
+      const inspection: Record<string, unknown> = {};
+      for (const filename of [
+        "templates/collection.fall-optimized.json",
+        "templates/collection.json",
+      ] as const) {
+        try {
+          const existing = await readThemeFile(theme.id, filename);
+          const content = existing.theme?.files?.nodes[0]?.body?.content ?? "";
+          const markerIndex = content.indexOf(RATING_MARKER);
+          const esgIndex = content.indexOf("esg-card-body");
+          inspection[filename] = {
+            found: Boolean(content),
+            hasEsgMarkup: esgIndex >= 0,
+            hasRatingMarker: markerIndex >= 0,
+            usesProductLoop: content.includes("for product in"),
+            preview:
+              esgIndex >= 0
+                ? content.slice(Math.max(0, esgIndex - 120), esgIndex + 420)
+                : content.slice(0, 420),
+          };
+        } catch (error) {
+          inspection[filename] = {
+            error: error instanceof Error ? error.message : "Unable to inspect template",
+          };
+        }
+      }
+      response.status(200).json({ ok: true, theme: { id: theme.id, name: theme.name }, inspection });
+      return;
+    }
+
     const theme = requestedThemeId
       ? themes.themes.nodes.find(
           (candidate) =>
