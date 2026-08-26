@@ -661,37 +661,24 @@ export default async function handler(request: any, response: any) {
         throw new ShopifyAdminRequestError("No published Shopify theme was found.");
       }
       const inspection: Record<string, unknown> = {};
-      for (const filename of [
-        "templates/collection.fall-optimized.json",
-        "templates/collection.json",
-      ] as const) {
-        try {
-          const existing = await readThemeFile(theme.id, filename);
-          const content = existing.theme?.files?.nodes[0]?.body?.content ?? "";
-          const markerIndex = content.indexOf(RATING_MARKER);
-          const esgIndex = content.indexOf("esg-card-body");
-          const cardIndex = content.indexOf('<article class="esg-card"');
-          inspection[filename] = {
-            found: Boolean(content),
-            hasEsgMarkup: esgIndex >= 0,
-            hasRatingMarker: markerIndex >= 0,
-            usesProductLoop: content.includes("for product in"),
-            markerNearCards:
-              markerIndex >= 0 &&
-              cardIndex >= 0 &&
-              Math.abs(markerIndex - cardIndex) < 4000,
-            preview:
-              cardIndex >= 0
-                ? content.slice(Math.max(0, cardIndex - 40), cardIndex + 520)
-                : esgIndex >= 0
-                  ? content.slice(Math.max(0, esgIndex - 120), esgIndex + 420)
-                  : content.slice(0, 420),
-          };
-        } catch (error) {
-          inspection[filename] = {
-            error: error instanceof Error ? error.message : "Unable to inspect template",
-          };
-        }
+      for (const file of await listThemeTextFiles(theme.id)) {
+        const filename = file.filename;
+        const content = file.body?.content;
+        if (!filename || !content) continue;
+        if (!content.includes("esg-card") && !content.includes("esg-price")) continue;
+        const markerIndex = content.indexOf(RATING_MARKER);
+        const cardIndex = content.indexOf('<article class="esg-card"');
+        inspection[filename] = {
+          hasRatingMarker: markerIndex >= 0,
+          markerNearCards:
+            markerIndex >= 0 && cardIndex >= 0 && Math.abs(markerIndex - cardIndex) < 4000,
+          articleCards: cardIndex >= 0,
+          esgCardCount: (content.match(/esg-card/g) ?? []).length,
+          preview:
+            cardIndex >= 0
+              ? content.slice(Math.max(0, cardIndex - 40), cardIndex + 520)
+              : content.slice(0, 520),
+        };
       }
       response.status(200).json({ ok: true, theme: { id: theme.id, name: theme.name }, inspection });
       return;
