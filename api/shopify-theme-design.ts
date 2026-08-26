@@ -395,6 +395,88 @@ async function readThemeFile(themeId: string, filename: string) {
   );
 }
 
+function isCollectionTemplateFilename(filename: string) {
+  return /^templates\/collection(?:\.[^/]+)?\.json$/.test(filename);
+}
+
+async function listThemeTextFiles(themeId: string) {
+  const nodes: Array<{ filename?: string; body?: { content?: string } | null }> = [];
+  let after: string | null = null;
+  do {
+    const page = await shopifyAdminRequest<{
+      theme: {
+        files: {
+          nodes: Array<{ filename?: string; body?: { content?: string } | null }>;
+          pageInfo: { hasNextPage: boolean; endCursor: string | null };
+        } | null;
+      } | null;
+    }>(
+      `query ThemeFilesPage($themeId: ID!, $after: String) {
+        theme(id: $themeId) {
+          files(first: 250, after: $after) {
+            nodes {
+              filename
+              body {
+                ... on OnlineStoreThemeFileBodyText { content }
+              }
+            }
+            pageInfo { hasNextPage endCursor }
+          }
+        }
+      }`,
+      { themeId, after },
+    );
+    nodes.push(...(page.theme?.files?.nodes ?? []));
+    after = page.theme?.files?.pageInfo.hasNextPage
+      ? page.theme.files.pageInfo.endCursor
+      : null;
+  } while (after);
+  return nodes;
+}
+
+async function collectPatchedCollectionTemplates(themeId: string, baseContent?: string) {
+  const patches = new Map<string, string>();
+  const remember = (filename: string, content: string) => {
+    const patched = patchEsgCardMarkup(content);
+    if (patched !== content) {
+      patches.set(filename, patched);
+    }
+  };
+
+  if (baseContent) {
+    remember(COLLECTION_JSON_TEMPLATE_FILENAME, baseContent);
+  }
+
+  for (const filename of [
+    "templates/collection.fall-halloween.json",
+    "templates/collection.fall-halloween.context.us.json",
+  ] as const) {
+    try {
+      const existing = await readThemeFile(themeId, filename);
+      const content = existing.theme?.files?.nodes[0]?.body?.content;
+      if (content?.includes("esg-")) remember(filename, content);
+    } catch {
+      // Alternate collection template may not exist.
+    }
+  }
+
+  try {
+    for (const file of await listThemeTextFiles(themeId)) {
+      const filename = file.filename;
+      const content = file.body?.content;
+      if (!filename || !content) continue;
+      if (!isCollectionTemplateFilename(filename)) continue;
+      if (filename === COLLECTION_JSON_TEMPLATE_FILENAME && baseContent) continue;
+      if (!content.includes("esg-card-body") || !content.includes("esg-price")) continue;
+      remember(filename, content);
+    }
+  } catch {
+    // Theme file listing may be unavailable.
+  }
+
+  return [...patches.entries()].map(([filename, content]) => ({ filename, content }));
+}
+
 async function readThemeLayout(themeId: string) {
   return readThemeFile(themeId, "layout/theme.liquid");
 }
@@ -670,35 +752,29 @@ export default async function handler(request: any, response: any) {
     const cardRender =
       `        {% comment %} ${RATING_MARKER} {% endcomment %}\n` +
       `        {% render 'ecg-product-rating', product: product, card_product: card_product %}\n`;
-    // Prefer discovering the live EcoShopGuide collection card markup by content,
-    // since Fall uses custom Liquid blocks embedded in collection templates.
-    try {
-      const themeFiles = await shopifyAdminRequest<{
-        theme: {
-          files: {
-            nodes: Array<{ filename?: string; body?: { content?: string } | null }>;
-          } | null;
-        } | null;
-      }>(
-        `query ThemeFilesForRatings($themeId: ID!) {
-          theme(id: $themeId) {
-            files(first: 250) {
-              nodes {
-                filename
-                body {
-                  ... on OnlineStoreThemeFileBodyText { content }
-                }
-              }
-            }
-          }
-        }`,
-        { themeId: theme.id },
+    // Fall collection cards live in custom Liquid embedded in collection JSON
+    // templates. Patch those during the template upload so a later collection.json
+    // rewrite does not erase the rating render markers.
+    const patchedCollectionTemplates = await collectPatchedCollectionTemplates(
+      theme.id,
+      updatedCollectionTemplate,
+    );
+    if (patchedCollectionTemplates.length) {
+      const primaryPatch = patchedCollectionTemplates.find(
+        (entry) => entry.filename === collectionTemplateFilename,
       );
+      if (primaryPatch) {
+        updatedCollectionTemplate = primaryPatch.content;
+      }
+    }
 
-      for (const file of themeFiles.theme?.files?.nodes ?? []) {
+    // Non-template theme files that contain the EcoShopGuide card markup.
+    try {
+      for (const file of await listThemeTextFiles(theme.id)) {
         const filename = file.filename;
         const content = file.body?.content;
         if (!filename || !content) continue;
+        if (isCollectionTemplateFilename(filename)) continue;
         if (!content.includes("esg-card-body") || !content.includes("esg-price")) continue;
         if (ratingFiles.some((entry) => entry.filename === filename)) continue;
         const patched = patchEsgCardMarkup(content);
@@ -708,25 +784,6 @@ export default async function handler(request: any, response: any) {
       }
     } catch {
       // Theme file listing may be unavailable; continue with known candidates.
-    }
-
-    for (const filename of [
-      "templates/collection.json",
-      "templates/collection.fall-halloween.json",
-      "templates/collection.fall-halloween.context.us.json",
-    ] as const) {
-      try {
-        const existing = await readThemeFile(theme.id, filename);
-        const content = existing.theme?.files?.nodes[0]?.body?.content;
-        if (!content || !content.includes("esg-")) continue;
-        if (ratingFiles.some((entry) => entry.filename === filename)) continue;
-        const patched = patchEsgCardMarkup(content);
-        if (patched !== content) {
-          ratingFiles.push({ filename, body: textBody(patched) });
-        }
-      } catch {
-        // Alternate collection template may not exist.
-      }
     }
 
     for (const filename of [
@@ -778,13 +835,19 @@ export default async function handler(request: any, response: any) {
       ],
       "foundation",
     );
+    const collectionTemplateUploads = [
+      {
+        filename: collectionTemplateFilename,
+        body: textBody(updatedCollectionTemplate),
+      },
+      ...patchedCollectionTemplates
+        .filter((entry) => entry.filename !== collectionTemplateFilename)
+        .map((entry) => ({ filename: entry.filename, body: textBody(entry.content) })),
+    ];
     const templateUpdate = await upsertThemeFiles(
       [
         { filename: templateFilename, body: textBody(updatedTemplate) },
-        {
-          filename: collectionTemplateFilename,
-          body: textBody(updatedCollectionTemplate),
-        },
+        ...collectionTemplateUploads,
       ],
       "template",
     );
@@ -906,6 +969,7 @@ export default async function handler(request: any, response: any) {
         filename: collectionTemplateFilename,
         format: collectionTemplateFormat,
       },
+      collectionTemplatePatches: patchedCollectionTemplates.map((entry) => entry.filename),
       jobId: templateUpdate.job?.id ?? foundationUpdate.job?.id ?? null,
       verification,
       layoutDiagnostics,
