@@ -4,6 +4,7 @@ import {
   RATING_MARKER,
   appendRatingCss,
   patchEsgCardMarkup,
+  patchEsgCollectionTemplateJson,
   patchThemeSnippet,
 } from "./shopify-ratings-sync";
 
@@ -26,6 +27,28 @@ test("patches esg collection cards before price", () => {
   assert.match(patched, /EcoShopGuide product rating/);
   assert.match(patched, /render 'ecg-product-rating'/);
   assert.match(patched, /<h4>Stem<\/h4>\s*\{% comment %\}/);
+});
+
+test("patches esg liquid embedded inside collection JSON templates", () => {
+  const original = JSON.stringify(
+    {
+      sections: {
+        custom_liquid_fall: {
+          type: "custom-liquid",
+          settings: {
+            custom_liquid:
+              '<div class="esg-card-body"><h4>{{ product.title }}</h4><div class="esg-price">{{ product.price | money }}</div>',
+          },
+        },
+      },
+    },
+    null,
+    2,
+  );
+  const patched = patchEsgCollectionTemplateJson(original);
+  assert.notEqual(patched, original);
+  assert.doesNotThrow(() => JSON.parse(patched));
+  assert.match(patched, /render 'ecg-product-rating'/);
 });
 
 test("appends rating styles without duplicating them", () => {

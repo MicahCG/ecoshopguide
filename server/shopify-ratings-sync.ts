@@ -132,6 +132,45 @@ export function patchEsgCardMarkup(content: string): string {
   return content.replace(/<div class="esg-price">/g, `${renderLine}<div class="esg-price">`);
 }
 
+export function patchEsgCollectionTemplateJson(content: string): string {
+  const templateJson = content
+    .replace(/^\uFEFF/, "")
+    .replace(/^\s*\/\*[\s\S]*?\*\/\s*/, "");
+  let template: unknown;
+  try {
+    template = JSON.parse(templateJson);
+  } catch {
+    return patchEsgCardMarkup(content);
+  }
+
+  let changed = false;
+  const patchValue = (value: unknown): unknown => {
+    if (
+      typeof value === "string" &&
+      value.includes("esg-card-body") &&
+      value.includes("esg-price")
+    ) {
+      const patched = patchEsgCardMarkup(value);
+      if (patched !== value) changed = true;
+      return patched;
+    }
+    if (Array.isArray(value)) return value.map(patchValue);
+    if (value && typeof value === "object") {
+      return Object.fromEntries(
+        Object.entries(value as Record<string, unknown>).map(([key, entry]) => [
+          key,
+          patchValue(entry),
+        ]),
+      );
+    }
+    return value;
+  };
+
+  const patched = patchValue(template);
+  if (!changed) return content;
+  return `${JSON.stringify(patched, null, 2)}\n`;
+}
+
 export function appendRatingCss(existingCss: string) {
   if (existingCss.includes(".ecg-product-rating")) return existingCss;
   return `${existingCss.trimEnd()}\n${RATING_CSS.trim()}\n`;

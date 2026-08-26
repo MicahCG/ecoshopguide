@@ -8,6 +8,7 @@ import {
   RATING_SNIPPET_FILENAME,
   appendRatingCss,
   patchEsgCardMarkup,
+  patchEsgCollectionTemplateJson,
   patchThemeSnippet,
   syncVerifiedCollectiveRatings,
 } from "../server/shopify-ratings-sync.js";
@@ -437,10 +438,22 @@ async function listThemeTextFiles(themeId: string) {
 async function collectPatchedCollectionTemplates(themeId: string, baseContent?: string) {
   const patches = new Map<string, string>();
   const remember = (filename: string, content: string) => {
-    const patched = patchEsgCardMarkup(content);
-    if (patched !== content) {
-      patches.set(filename, patched);
+    const patched = isCollectionTemplateFilename(filename)
+      ? patchEsgCollectionTemplateJson(content)
+      : patchEsgCardMarkup(content);
+    if (patched === content) return;
+    if (isCollectionTemplateFilename(filename)) {
+      try {
+        JSON.parse(
+          patched
+            .replace(/^\uFEFF/, "")
+            .replace(/^\s*\/\*[\s\S]*?\*\/\s*/, ""),
+        );
+      } catch {
+        return;
+      }
     }
+    patches.set(filename, patched);
   };
 
   if (baseContent) {
