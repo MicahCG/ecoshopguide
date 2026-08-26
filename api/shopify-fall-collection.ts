@@ -38,10 +38,36 @@ const FALL_SHORTLIST = [
     phrases: [["tache", "fall", "orange"], ["farmhouse", "patchwork", "throw"]],
   },
   {
-    label: "Fall Gingham Blanket",
-    phrases: [["fall", "gingham", "blanket"]],
+    label: "Folk Copper",
+    phrases: [["folk", "copper"]],
+  },
+  {
+    label: "Hello Pumpkin Coir Doormat",
+    phrases: [
+      ["hello", "pumpkin", "coir"],
+      ["hello", "pumpkin", "doormat"],
+    ],
+  },
+  {
+    label: '32" Faux Bittersweet Stem',
+    phrases: [["bittersweet", "stem"]],
+  },
+  {
+    label: '28" Faux Pine Cone Branch Stem',
+    phrases: [["pine", "cone", "branch"]],
+  },
+  {
+    label: '27" Faux Japanese Maple Leaf Stem',
+    phrases: [["japanese", "maple"]],
+  },
+  {
+    label: '14" Faux Magnolia Leaf Stem',
+    phrases: [["magnolia", "leaf", "stem"]],
   },
 ] as const;
+
+/** Replaced assortment — remove these handles when syncing the Fall collection. */
+const FALL_REMOVE_HANDLES = ["fall-gingham-blanket", "solid-color-lobster-rope-doormat"] as const;
 
 function matchesProduct(product: Product, phrase: readonly string[]) {
   const searchable = `${product.title} ${product.handle} ${product.vendor ?? ""}`.toLowerCase();
@@ -93,6 +119,11 @@ export default async function handler(request: any, response: any) {
         Boolean(item.product && !currentProductIds.has(item.product.id)),
       )
       .map((item) => item.product);
+    const removals = data.products.nodes.filter(
+      (product) =>
+        FALL_REMOVE_HANDLES.includes(product.handle as (typeof FALL_REMOVE_HANDLES)[number]) &&
+        currentProductIds.has(product.id),
+    );
 
     if (additions.length) {
       const result = await shopifyAdminRequest<{
@@ -110,10 +141,27 @@ export default async function handler(request: any, response: any) {
       }
     }
 
+    if (removals.length) {
+      const result = await shopifyAdminRequest<{
+        collectionRemoveProducts: { userErrors: Array<{ message: string }> };
+      }>(
+        `mutation RemoveFallCollectionProducts($id: ID!, $productIds: [ID!]!) {
+          collectionRemoveProducts(id: $id, productIds: $productIds) {
+            userErrors { message }
+          }
+        }`,
+        { id: collection.id, productIds: removals.map((product) => product.id) },
+      );
+      if (result.collectionRemoveProducts.userErrors.length) {
+        throw new ShopifyAdminRequestError("Shopify rejected one or more Fall collection removals.");
+      }
+    }
+
     response.status(200).json({
       ok: true,
       collection: { id: collection.id, handle: collection.handle },
       added: additions.map((product) => ({ title: product.title, handle: product.handle })),
+      removed: removals.map((product) => ({ title: product.title, handle: product.handle })),
       alreadyPresent: selected
         .filter((item) => item.product && currentProductIds.has(item.product.id))
         .map((item) => ({ label: item.label, title: item.product?.title, handle: item.product?.handle })),

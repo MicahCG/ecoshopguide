@@ -22,6 +22,9 @@ import JungleSpaVibes from "@/pages/JungleSpaVibes";
 import CozyDormRoom from "@/pages/CozyDormRoom";
 import NotFound from "@/pages/not-found";
 import WeddingCollection from "@/pages/WeddingCollection";
+import DormCollection from "@/pages/DormCollection";
+import FallHalloweenCollection from "@/pages/FallHalloweenCollection";
+import WeddingLook from "@/pages/WeddingLook";
 import ShopifyProductPage from "@/pages/ShopifyProduct";
 import { ShopifyCartProvider } from "@/components/ShopifyCart";
 
@@ -47,8 +50,12 @@ function Router() {
       <Route path="/pages/terms-of-service" component={TermsOfService} />
       <Route path="/shop-the-look" component={ShopTheLook} />
       <Route path="/shop-the-look/weddings" component={WeddingCollection} />
+      <Route path="/shop-the-look/dorm" component={DormCollection} />
+      <Route path="/shop-the-look/fall-halloween" component={FallHalloweenCollection} />
+      <Route path="/wedding/:look" component={WeddingLook} />
       <Route path="/shop-the-look/:category" component={IdeaListCategory} />
       <Route path="/collections/wedding" component={WeddingCollection} />
+      <Route path="/collections/fall-halloween" component={FallHalloweenCollection} />
       <Route path="/products/:handle" component={ShopifyProductPage} />
       <Route path="/pages/dreamy-boho-garden-wedding" component={DreamyBohoGardenWedding} />
       <Route path="/pages/enchanted-forest-retreat" component={EnchantedForestRetreat} />

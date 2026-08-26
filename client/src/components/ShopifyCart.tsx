@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { useLocation } from "wouter";
-import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
-import type { ShopifyCart, ShopifyVariant } from "@shared/shopify";
+import { MapPin, Minus, Plus, ShieldCheck, ShoppingBag, Trash2, Truck } from "lucide-react";
+import type { ShopifyCart, ShopifyVariant, SupportedCollectionHandle } from "@shared/shopify";
 import { collectAttribution, formatMoney } from "@/lib/shopify-ui";
 import { ecoTrack } from "@/lib/analytics";
 import {
@@ -35,7 +35,7 @@ interface CartValue {
   open: boolean;
   setOpen(value: boolean): void;
   refresh(): Promise<void>;
-  add(variant: ShopifyVariant, product: { id: string; title: string }): Promise<void>;
+  add(variant: ShopifyVariant, product: { id: string; title: string; collection?: SupportedCollectionHandle }): Promise<void>;
   update(lineId: string, quantity: number): Promise<void>;
   remove(lineId: string): Promise<void>;
   checkout(): Promise<void>;
@@ -86,7 +86,7 @@ export function ShopifyCartProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  async function add(variant: ShopifyVariant, product: { id: string; title: string }) {
+  async function add(variant: ShopifyVariant, product: { id: string; title: string; collection?: SupportedCollectionHandle }) {
     const added = await mutate("/api/shopify/cart/lines", "POST", {
       variantId: variant.id,
       quantity: 1,
@@ -97,6 +97,7 @@ export function ShopifyCartProvider({ children }: { children: ReactNode }) {
     ecoTrack("add_to_cart", {
       value: Number(variant.price.amount),
       currency: variant.price.currencyCode,
+      ...(product.collection ? { collection: product.collection } : {}),
       items: [{ item_id: variant.id, item_name: product.title, item_variant: variant.title, price: Number(variant.price.amount), quantity: 1, shopify_product_id: product.id }],
     });
   }
@@ -148,8 +149,8 @@ function CartDrawer() {
   const { cart, loading, error, open, setOpen, refresh, update, remove, checkout } = useShopifyCart();
   const [location] = useLocation();
   const showButton = Boolean(cart?.totalQuantity)
-    || location === "/shop-the-look/weddings"
-    || location === "/collections/wedding"
+    || location.startsWith("/shop-the-look/")
+    || location.startsWith("/collections/")
     || location.startsWith("/products/");
 
   return <>
@@ -193,6 +194,11 @@ function CartDrawer() {
         {cart?.lines.length ? <div className="border-t pt-5 mt-3">
           <div className="flex justify-between font-semibold text-lg"><span>Subtotal</span><span>{formatMoney(cart.cost.subtotalAmount)}</span></div>
           <p className="text-xs text-muted-foreground mt-1">Taxes and shipping are calculated during checkout.</p>
+          <div className="mt-4 space-y-2 rounded-lg bg-[#f4f0e7] p-3 text-xs text-[#435047]">
+            <p className="flex gap-2"><Truck className="h-4 w-4 shrink-0 text-[#294b3a]" aria-hidden="true"/>Delivery options and expected arrival are confirmed for your address at checkout.</p>
+            <p className="flex gap-2"><MapPin className="h-4 w-4 shrink-0 text-[#294b3a]" aria-hidden="true"/>Items ship directly from our curated brand partners.</p>
+            <p className="flex gap-2"><ShieldCheck className="h-4 w-4 shrink-0 text-[#294b3a]" aria-hidden="true"/>Secure payment and live inventory verification through Shopify.</p>
+          </div>
           <button disabled={loading} onClick={() => void checkout()} className="mt-4 w-full rounded-full bg-[#294b3a] text-white py-3.5 font-semibold disabled:opacity-50">Continue to secure checkout</button>
         </div> : null}
       </SheetContent>

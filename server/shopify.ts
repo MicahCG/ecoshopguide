@@ -1,13 +1,25 @@
 import { isIP } from "node:net";
 import { z } from "zod";
-import type { ShopifyCart, ShopifyCollection, ShopifyImage, ShopifyProduct, ShopifyReview } from "../shared/shopify.js";
+import {
+  SUPPORTED_COLLECTION_HANDLES,
+  isSupportedCollectionHandle,
+  type ShopifyCart,
+  type ShopifyCollection,
+  type ShopifyImage,
+  type ShopifyProduct,
+  type ShopifyReview,
+  type SupportedCollectionHandle,
+} from "../shared/shopify.js";
 
 const gid = (kind: string) => z.string().min(1).max(512).regex(new RegExp(`^gid://shopify/${kind}/[^\\s]+$`));
 export const cartIdSchema = gid("Cart");
 export const lineIdSchema = gid("CartLine");
 export const variantIdSchema = gid("ProductVariant");
 export const quantitySchema = z.number().int().min(1).max(100);
-export const handleSchema = z.string().regex(/^[a-z0-9][a-z0-9-]{0,127}$/);
+// Shopify handles can include Unicode characters (for example ™). Route params
+// are already decoded by the framework; reject only separators/control space.
+export const handleSchema = z.string().min(1).max(128).regex(/^[^/?#\s]+$/u);
+export const collectionHandleSchema = z.enum(SUPPORTED_COLLECTION_HANDLES);
 const attributeValue = z.string().trim().min(1).max(255);
 export const attributionSchema = z.object({
   epik: attributeValue.optional(), utm_source: attributeValue.optional(), utm_medium: attributeValue.optional(),
@@ -54,13 +66,49 @@ function image(value: any): ShopifyImage | undefined {
   return value?.url ? { url: value.url, ...(value.altText ? { altText: value.altText } : {}), ...(value.width ? { width: value.width } : {}), ...(value.height ? { height: value.height } : {}) } : undefined;
 }
 
+// Shopify Collective displays supplier ratings in its retailer app, but doesn't
+// synchronize them to imported product metafields. These are manually verified
+// supplier aggregates, keyed to a specific imported product, and intentionally
+// only added when an exact Collective listing has been supplied.
+const verifiedCollectiveDetails: Record<string, { review: ShopifyReview; supplierShipsInDays?: number }> = {
+  "classic-white-box-light-pink-roses": { review: { rating: 4.2, count: 15 }, supplierShipsInDays: 2 },
+  "7oz-posh™-candle-vessel-lid": { review: { rating: 5, count: 155 } },
+  // Verified in Shopify Collective on August 12, 2026. Collective does not
+  // copy these product ratings into Storefront API metafields when importing.
+  "10-faux-pale-pink-ranunculus-stem-bundle": { review: { rating: 5, count: 4 }, supplierShipsInDays: 2 },
+  "13-faux-blush-ranunculus-stem": { review: { rating: 5, count: 2 }, supplierShipsInDays: 2 },
+  "17-faux-anemone-white-stem": { review: { rating: 5, count: 3 }, supplierShipsInDays: 2 },
+  "geranium-rose-signature-candle": { review: { rating: 4.9, count: 12 } },
+  "forest-bathing-signature-candle-fir-pine-patchouli": { review: { rating: 5, count: 19 } },
+  // Fall & Halloween — verified in Shopify Collective on August 26, 2026.
+  "folk-copper": { review: { rating: 5, count: 3 }, supplierShipsInDays: 3 },
+  "hello-pumpkin-coir-doormat": { review: { rating: 5, count: 1 }, supplierShipsInDays: 7 },
+  "tache-fall-orange-farmhouse-super-soft-micro-fleece-plaid-patchwork-plush-lightweight-bed-throw-blanket-4021": {
+    review: { rating: 5, count: 6 },
+  },
+  "32-faux-bittersweet-stem": { review: { rating: 4.6, count: 7 } },
+  "28-faux-pine-cone-branch-stem": { review: { rating: 4.7, count: 3 } },
+  "27-faux-japanese-maple-leaf-stem": { review: { rating: 5, count: 7 } },
+  "14-faux-magnolia-leaf-stem": { review: { rating: 4.6, count: 10 } },
+  "autumn-in-the-holler-hand-poured-mountain-fall-candle": { review: { rating: 5, count: 2 } },
+  "obsessed-with-fall-candle": { review: { rating: 4.9, count: 11 } },
+  "tache-warm-colorful-thanksgiving-leaves-fall-foliage-tapestry-table-runners-11516": {
+    review: { rating: 5, count: 3 },
+  },
+};
+
 export function normalizeProduct(raw: any): ShopifyProduct {
+  const verified = verifiedCollectiveDetails[raw.handle];
+  const variants = (raw.variants?.nodes ?? [])
+    .filter((variant: any) => variant.availableForSale)
+    .map((v: any) => ({ id: v.id, title: v.title, availableForSale: true, price: v.price, selectedOptions: v.selectedOptions ?? [], image: image(v.image) }));
   return {
     id: raw.id, handle: raw.handle, title: raw.title, description: raw.description ?? "", descriptionHtml: raw.descriptionHtml ?? "",
-    availableForSale: Boolean(raw.availableForSale), featuredImage: image(raw.featuredImage), images: (raw.images?.nodes ?? []).map(image).filter(Boolean),
+    availableForSale: variants.length > 0, featuredImage: image(raw.featuredImage), images: (raw.images?.nodes ?? []).map(image).filter(Boolean),
     price: raw.priceRange.minVariantPrice, options: raw.options ?? [],
-    variants: (raw.variants?.nodes ?? []).map((v: any) => ({ id: v.id, title: v.title, availableForSale: Boolean(v.availableForSale), price: v.price, selectedOptions: v.selectedOptions ?? [], image: image(v.image) })),
-    review: parseReview(raw.rating, raw.ratingCount),
+    variants,
+    review: parseReview(raw.rating, raw.ratingCount) ?? verified?.review,
+    supplierShipsInDays: verified?.supplierShipsInDays,
   };
 }
 
@@ -103,24 +151,68 @@ async function graphql<T>(query: string, variables: Record<string, unknown> = {}
   return payload.data as T;
 }
 
-export async function getWeddingCollection(): Promise<ShopifyCollection | null> {
-  const data = await graphql<any>(`query Wedding { collection(handle: "wedding") { id handle title description image { url altText width height } products(first: 100) { nodes { ${PRODUCT_FRAGMENT} } } } }`);
-  const c = data.collection;
-  return c ? { id: c.id, handle: c.handle, title: c.title, description: c.description ?? "", image: image(c.image), products: c.products.nodes.map(normalizeProduct) } : null;
+const dormProductOrder = [
+  "Luxury Travel Backpack for Women's Fashion Women's Backpack",
+  "Vintage Wooden Rotating Makeup Mirror, 360 Swivel Large Desktop Vanity Mirror For Bedroom Dormitory Standing Cosmetic Mirror For Table",
+  "Ins Style Student Dormitory Desktop Storage Fresh and Cute Multi-layer Drawer-type Cosmetic Organizer Lipstick Holder",
+  "Enjoy Organizer-Shower Caddy Organizer with Handle, 3 Compartments, Portable Storage Bin for Bathroom, Dorm, Gym -Made In USA",
+  "The Hamper",
+  "The Sculpted Bin - Petite with Lid | Set of 3",
+  "Tache White Ivory Polar Faux Fur with Sherpa Throw Blanket",
+  "Tall Bamboo Bookshelf – Adjustable Shelves, Narrow Freestanding Storage Rack",
+  "Wood Wall Shelves 15.8” with Metal Brackets – Rustic Floating Shelves | 5/8 Pack",
+  "Bamboo Woven Storage Basket",
+  "Bamboo Laptop Lap Desk with Pillow Cushion Stand Holder Table",
+  "Full-Length Arched Floor Mirror with Stand - Multiple Size",
+  "Organic Sateen Bed Sheets Set",
+  "Fadey White 3D Washable Rug",
+  "Fennco Styles Handmade Tufted Woven Tassel Decorative Throw Pillow Cover 20\" W x 20\" L - White Boho Cushion Case for Home, Couch, Living Room, Bedroom, Office Décor",
+  "Modern Classic Desk Lamp - Arcana Table Lamp",
+  "40 LED Large Photo Clip Clear Cable Lights - Plug in",
+  "Vesta Green Macrame Wall Hangings",
+  "Artificial Ivy Leaf Garland Fake Leaves Hanging Vines For Home Decor Creeper Green Ivy Artificial Ivy Garland Greenery Hanging Plant Vine for Wedding Wall Party Room Astethic Stuff Decor 100pcs Leaf 1 piece 2.4M",
+  "Succulent 'String of Pearls'",
+  "Bender Wall Planter",
+  "5\" Faux Green Sedum Succulent Pick",
+  "Forest Bathing - Signature Candle (Fir + Pine + Patchouli)",
+  "Geranium + Rose - Signature Candle",
+];
+
+/** Assortment swaps — hide these handles on the Fall collection grid. */
+const fallHiddenHandles = new Set(["fall-gingham-blanket", "solid-color-lobster-rope-doormat"]);
+
+function orderDormProducts(products: ShopifyProduct[]): ShopifyProduct[] {
+  const order = new Map(dormProductOrder.map((title, index) => [title, index]));
+  return [...products].sort((a, b) => (order.get(a.title) ?? Number.MAX_SAFE_INTEGER) - (order.get(b.title) ?? Number.MAX_SAFE_INTEGER));
 }
-export async function getWeddingProduct(handle: string): Promise<ShopifyProduct | null> {
+
+export async function getShopifyCollection(handle: SupportedCollectionHandle): Promise<ShopifyCollection | null> {
+  const data = await graphql<any>(`query Collection($handle: String!) { collection(handle: $handle) { id handle title description image { url altText width height } products(first: 100) { nodes { ${PRODUCT_FRAGMENT} } } } }`, { handle });
+  const c = data.collection;
+  if (!c || c.handle !== handle) return null;
+  let products = c.products.nodes.map(normalizeProduct).filter((product: ShopifyProduct) => product.availableForSale);
+  if (handle === "fall-halloween") {
+    products = products.filter((product: ShopifyProduct) => !fallHiddenHandles.has(product.handle));
+  }
+  return { id: c.id, handle: c.handle, title: c.title, description: c.description ?? "", image: image(c.image), products: handle === "dorm" ? orderDormProducts(products) : products };
+}
+export async function getDormCollection() { return getShopifyCollection("dorm"); }
+export async function getFallHalloweenCollection() { return getShopifyCollection("fall-halloween"); }
+export async function getWeddingCollection() { return getShopifyCollection("wedding"); }
+export async function getShopifyProduct(handle: string): Promise<ShopifyProduct | null> {
   const data = await graphql<any>(`query Product($handle: String!) { product(handle: $handle) { ${PRODUCT_FRAGMENT} collections(first: 20) { nodes { handle } } } }`, { handle });
   const p = data.product;
-  return p?.collections?.nodes?.some((c: any) => c.handle === "wedding") ? normalizeProduct(p) : null;
+  const product = p?.collections?.nodes?.some((c: any) => isSupportedCollectionHandle(c.handle)) ? normalizeProduct(p) : null;
+  return product?.availableForSale ? product : null;
 }
 
-export function isWeddingVariant(variant: any): boolean {
-  return Boolean(variant?.availableForSale && variant?.product?.collections?.nodes?.some((collection: any) => collection.handle === "wedding"));
+export function isApprovedVariant(variant: any): boolean {
+  return Boolean(variant?.availableForSale && variant?.product?.collections?.nodes?.some((collection: any) => isSupportedCollectionHandle(collection.handle)));
 }
 
-async function assertWeddingVariant(variantId: string, buyerIp?: string): Promise<void> {
+async function assertApprovedVariant(variantId: string, buyerIp?: string): Promise<void> {
   const data = await graphql<any>(`query Variant($id: ID!) { node(id: $id) { ... on ProductVariant { id availableForSale product { collections(first: 20) { nodes { handle } } } } } }`, { id: variantId }, buyerIp);
-  if (!isWeddingVariant(data.node)) throw new ShopifyRequestError(422, "This Wedding option is unavailable.");
+  if (!isApprovedVariant(data.node)) throw new ShopifyRequestError(422, "This option is unavailable.");
 }
 
 type ShopifyPrivateCart = ShopifyCart & { id: string };
@@ -140,11 +232,11 @@ async function cartMutation(query: string, variables: Record<string, unknown>, r
   return normalizeCart(result.cart);
 }
 export async function createCart(variantId: string, quantity: number, attribution: z.infer<typeof attributionSchema> = {}, buyerIp?: string): Promise<ShopifyPrivateCart> {
-  await assertWeddingVariant(variantId, buyerIp);
+  await assertApprovedVariant(variantId, buyerIp);
   return cartMutation(`mutation Create($input: CartInput!) { cartCreate(input: $input) { cart { ${CART_FRAGMENT} } userErrors { field message code } } }`, { input: { lines: [{ merchandiseId: variantId, quantity }], attributes: sanitizeAttribution(attribution) } }, "cartCreate", buyerIp);
 }
 export async function getCart(id: string, buyerIp?: string): Promise<ShopifyPrivateCart | null> { const d = await graphql<any>(`query Cart($id: ID!) { cart(id: $id) { ${CART_FRAGMENT} } }`, { id }, buyerIp); return d.cart ? normalizeCart(d.cart) : null; }
-export async function addCartLine(cartId: string, variantId: string, quantity: number, buyerIp?: string) { await assertWeddingVariant(variantId, buyerIp); return cartMutation(`mutation Add($cartId: ID!, $lines: [CartLineInput!]!) { cartLinesAdd(cartId: $cartId, lines: $lines) { cart { ${CART_FRAGMENT} } userErrors { field message code } } }`, { cartId, lines: [{ merchandiseId: variantId, quantity }] }, "cartLinesAdd", buyerIp); }
+export async function addCartLine(cartId: string, variantId: string, quantity: number, buyerIp?: string) { await assertApprovedVariant(variantId, buyerIp); return cartMutation(`mutation Add($cartId: ID!, $lines: [CartLineInput!]!) { cartLinesAdd(cartId: $cartId, lines: $lines) { cart { ${CART_FRAGMENT} } userErrors { field message code } } }`, { cartId, lines: [{ merchandiseId: variantId, quantity }] }, "cartLinesAdd", buyerIp); }
 export async function updateCartLine(cartId: string, lineId: string, quantity: number, buyerIp?: string) { return cartMutation(`mutation Update($cartId: ID!, $lines: [CartLineUpdateInput!]!) { cartLinesUpdate(cartId: $cartId, lines: $lines) { cart { ${CART_FRAGMENT} } userErrors { field message code } } }`, { cartId, lines: [{ id: lineId, quantity }] }, "cartLinesUpdate", buyerIp); }
 export async function removeCartLine(cartId: string, lineId: string, buyerIp?: string) { return cartMutation(`mutation Remove($cartId: ID!, $lineIds: [ID!]!) { cartLinesRemove(cartId: $cartId, lineIds: $lineIds) { cart { ${CART_FRAGMENT} } userErrors { field message code } } }`, { cartId, lineIds: [lineId] }, "cartLinesRemove", buyerIp); }
 export async function updateCartAttributes(cartId: string, attribution: z.infer<typeof attributionSchema>, buyerIp?: string) {

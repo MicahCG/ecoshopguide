@@ -12,7 +12,9 @@ import logoImage from '@assets/big_1761933095348.png';
 import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
-  { href: '/shop-the-look', label: 'Shop the Look' },
+  { href: '/shop-the-look/fall-halloween', label: 'Fall' },
+  { href: '/shop-the-look/dorm', label: 'Dorm' },
+  { href: '/shop-the-look/weddings', label: 'Weddings' },
   { href: '/pages/about', label: 'About' },
   { href: '/pages/contact', label: 'Contact' },
 ];

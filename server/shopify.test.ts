@@ -4,7 +4,7 @@ import {
   attributionSchema,
   cartIdSchema,
   mapShopifyErrors,
-  isWeddingVariant,
+  isApprovedVariant,
   normalizeProduct,
   parseReview,
   quantitySchema,
@@ -38,6 +38,27 @@ test("omits review unless both valid real fields are present", () => {
   assert.equal(parseReview({ value: '{"value":"5.1"}' }, { value: "2" }), undefined);
 });
 
+test("applies verified Collective review overrides when metafields are absent", () => {
+  const product = normalizeProduct({
+    ...rawProduct,
+    handle: "folk-copper",
+    title: "Folk Copper",
+    rating: null,
+    ratingCount: null,
+  });
+  assert.deepEqual(product.review, { rating: 5, count: 3 });
+  assert.equal(product.supplierShipsInDays, 3);
+});
+
+test("prefers live metafields over Collective review overrides", () => {
+  const product = normalizeProduct({
+    ...rawProduct,
+    handle: "folk-copper",
+    title: "Folk Copper",
+  });
+  assert.deepEqual(product.review, { rating: 4.7, count: 12 });
+});
+
 test("validates Shopify GIDs and bounded quantities", () => {
   assert.equal(cartIdSchema.safeParse("gid://shopify/Cart/abc?key=secret").success, true);
   assert.equal(variantIdSchema.safeParse("gid://shopify/ProductVariant/12").success, true);
@@ -56,14 +77,17 @@ test("sanitizes allowlisted attribution without PII", () => {
   assert.deepEqual(sanitizeAttribution(attributionSchema.parse({ utm_campaign: "email-jane@example.com", utm_content: "call-512-555-0199", utm_term: "https://example.com" })), []);
 });
 
-test("validates buyer IPs and Wedding variant membership", () => {
+test("validates buyer IPs and approved collection variant membership", () => {
   assert.equal(validatedBuyerIp("203.0.113.10"), "203.0.113.10");
   assert.equal(validatedBuyerIp("2001:db8::1"), "2001:db8::1");
   assert.equal(validatedBuyerIp("203.0.113.10, 10.0.0.1"), undefined);
   assert.equal(validatedBuyerIp("not-an-ip"), undefined);
-  assert.equal(isWeddingVariant({ availableForSale: true, product: { collections: { nodes: [{ handle: "wedding" }] } } }), true);
-  assert.equal(isWeddingVariant({ availableForSale: false, product: { collections: { nodes: [{ handle: "wedding" }] } } }), false);
-  assert.equal(isWeddingVariant({ availableForSale: true, product: { collections: { nodes: [{ handle: "other" }] } } }), false);
+  assert.equal(isApprovedVariant({ availableForSale: true, product: { collections: { nodes: [{ handle: "wedding" }] } } }), true);
+  assert.equal(isApprovedVariant({ availableForSale: true, product: { collections: { nodes: [{ handle: "dorm" }] } } }), true);
+  assert.equal(isApprovedVariant({ availableForSale: true, product: { collections: { nodes: [{ handle: "fall-halloween" }] } } }), true);
+  assert.equal(isApprovedVariant({ availableForSale: false, product: { collections: { nodes: [{ handle: "fall-halloween" }] } } }), false);
+  assert.equal(isApprovedVariant({ availableForSale: true, product: { collections: { nodes: [{ handle: "other" }] } } }), false);
+  assert.equal(isApprovedVariant(undefined), false);
 });
 
 test("maps Shopify userErrors without leaking field internals", () => {
