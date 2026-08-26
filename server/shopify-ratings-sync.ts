@@ -102,6 +102,36 @@ export function patchThemeSnippet(content: string, renderLine: string): string {
   return `${content.trimEnd()}\n${renderLine}`;
 }
 
+export function patchEsgCardMarkup(content: string): string {
+  if (!content.includes("esg-card-body") || !content.includes("esg-price")) {
+    return content;
+  }
+
+  const renderLine =
+    `{% comment %} ${RATING_MARKER} {% endcomment %}\n` +
+    `{% render 'ecg-product-rating', product: product, card_product: card_product %}\n`;
+
+  if (content.includes(RATING_MARKER)) {
+    return content.replace(
+      /\{%\s*comment\s*%\}\s*EcoShopGuide product rating\s*\{%\s*endcomment\s*%\}\s*\{%\s*render\s+'ecg-product-rating'[^%]*%\}\s*/g,
+      renderLine,
+    );
+  }
+
+  const patterns = [
+    /(<div class="esg-card-body">\s*<h4>[\s\S]*?<\/h4>)(\s*<div class="esg-price">)/g,
+    /(<div class=\\"esg-card-body\\">\s*<h4>[\s\S]*?<\/h4>)(\s*<div class=\\"esg-price\\">)/g,
+  ];
+
+  for (const pattern of patterns) {
+    if (pattern.test(content)) {
+      return content.replace(pattern, `$1\n${renderLine}$2`);
+    }
+  }
+
+  return content.replace(/<div class="esg-price">/g, `${renderLine}<div class="esg-price">`);
+}
+
 export function appendRatingCss(existingCss: string) {
   if (existingCss.includes(".ecg-product-rating")) return existingCss;
   return `${existingCss.trimEnd()}\n${RATING_CSS.trim()}\n`;

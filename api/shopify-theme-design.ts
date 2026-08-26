@@ -7,6 +7,7 @@ import {
   RATING_SNIPPET,
   RATING_SNIPPET_FILENAME,
   appendRatingCss,
+  patchEsgCardMarkup,
   patchThemeSnippet,
   syncVerifiedCollectiveRatings,
 } from "../server/shopify-ratings-sync.js";
@@ -670,7 +671,7 @@ export default async function handler(request: any, response: any) {
       `        {% comment %} ${RATING_MARKER} {% endcomment %}\n` +
       `        {% render 'ecg-product-rating', product: product, card_product: card_product %}\n`;
     // Prefer discovering the live EcoShopGuide collection card markup by content,
-    // since Helio/Horizon default product cards are not what shoppers see on Fall.
+    // since Fall uses custom Liquid blocks embedded in collection templates.
     try {
       const themeFiles = await shopifyAdminRequest<{
         theme: {
@@ -693,39 +694,14 @@ export default async function handler(request: any, response: any) {
         }`,
         { themeId: theme.id },
       );
-      const esgRender =
-        `        {% comment %} ${RATING_MARKER} {% endcomment %}\n` +
-        `        {% render 'ecg-product-rating', product: product, card_product: card_product %}\n`;
+
       for (const file of themeFiles.theme?.files?.nodes ?? []) {
         const filename = file.filename;
         const content = file.body?.content;
         if (!filename || !content) continue;
-        if (!content.includes("esg-price") && !content.includes("esg-card-body")) continue;
+        if (!content.includes("esg-card-body") || !content.includes("esg-price")) continue;
         if (ratingFiles.some((entry) => entry.filename === filename)) continue;
-        let patched = content;
-        if (content.includes(RATING_MARKER)) {
-          patched = patchThemeSnippet(content, esgRender);
-        } else if (content.includes('<div class="esg-price">')) {
-          patched = content.replace(
-            /<div class="esg-price">/g,
-            `${esgRender}<div class="esg-price">`,
-          );
-        } else if (content.includes("esg-price")) {
-          patched = content.replace(
-            /(class="esg-price"[^>]*>)/,
-            `$1`,
-          );
-          // Fall back to inserting before the first esg-price opening tag variant.
-          patched = content.replace(
-            /(<[^>]*class="[^"]*esg-price[^"]*"[^>]*>)/,
-            `${esgRender}$1`,
-          );
-        } else {
-          patched = content.replace(
-            /(<div class="esg-card-body">\s*<h4>[\s\S]*?<\/h4>)/,
-            `$1\n${esgRender}`,
-          );
-        }
+        const patched = patchEsgCardMarkup(content);
         if (patched !== content) {
           ratingFiles.push({ filename, body: textBody(patched) });
         }
@@ -735,33 +711,21 @@ export default async function handler(request: any, response: any) {
     }
 
     for (const filename of [
-      "sections/esg-fall-shop.liquid",
-      "sections/esg-collection-shop.liquid",
-      "snippets/esg-card.liquid",
-      "snippets/esg-product-card.liquid",
+      "templates/collection.json",
+      "templates/collection.fall-halloween.json",
+      "templates/collection.fall-halloween.context.us.json",
     ] as const) {
       try {
         const existing = await readThemeFile(theme.id, filename);
         const content = existing.theme?.files?.nodes[0]?.body?.content;
         if (!content || !content.includes("esg-")) continue;
         if (ratingFiles.some((entry) => entry.filename === filename)) continue;
-        const esgRender =
-          `        {% comment %} ${RATING_MARKER} {% endcomment %}\n` +
-          `        {% render 'ecg-product-rating', product: product, card_product: card_product %}\n`;
-        let patched = content;
-        if (content.includes(RATING_MARKER)) {
-          patched = patchThemeSnippet(content, esgRender);
-        } else if (content.includes("esg-price")) {
-          patched = content.replace(
-            /<div class="esg-price">/g,
-            `${esgRender}<div class="esg-price">`,
-          );
-        } else {
-          patched = patchThemeSnippet(content, esgRender);
+        const patched = patchEsgCardMarkup(content);
+        if (patched !== content) {
+          ratingFiles.push({ filename, body: textBody(patched) });
         }
-        ratingFiles.push({ filename, body: textBody(patched) });
       } catch {
-        // Custom EcoShopGuide section/snippet may not exist.
+        // Alternate collection template may not exist.
       }
     }
 
