@@ -964,6 +964,29 @@ export default async function handler(request: any, response: any) {
     // so the live theme can render stars without a separate serverless function.
     const ratingsSync = await syncVerifiedCollectiveRatings();
 
+    const esgTemplateVerification: Record<
+      string,
+      { hasEsgMarkup: boolean; hasRatingMarker: boolean }
+    > = {};
+    for (const filename of [
+      collectionTemplateFilename,
+      ...patchedCollectionTemplates.map((entry) => entry.filename),
+    ]) {
+      try {
+        const verified = await readThemeFile(theme.id, filename);
+        const content = verified.theme?.files?.nodes[0]?.body?.content ?? "";
+        esgTemplateVerification[filename] = {
+          hasEsgMarkup: content.includes("esg-card-body"),
+          hasRatingMarker: content.includes(RATING_MARKER),
+        };
+      } catch {
+        esgTemplateVerification[filename] = {
+          hasEsgMarkup: false,
+          hasRatingMarker: false,
+        };
+      }
+    }
+
     response.status(200).json({
       ok: true,
       theme: { id: theme.id, name: theme.name, role: theme.role },
@@ -983,6 +1006,7 @@ export default async function handler(request: any, response: any) {
         format: collectionTemplateFormat,
       },
       collectionTemplatePatches: patchedCollectionTemplates.map((entry) => entry.filename),
+      esgTemplateVerification,
       jobId: templateUpdate.job?.id ?? foundationUpdate.job?.id ?? null,
       verification,
       layoutDiagnostics,

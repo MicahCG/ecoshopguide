@@ -13,12 +13,14 @@ export const RATING_SNIPPET = `{% comment %} ${RATING_MARKER} {% endcomment %}
   if ecg_product == blank and closest.product != blank
     assign ecg_product = closest.product
   endif
-  assign ecg_count = ecg_product.metafields.reviews.rating_count.value | default: ecg_product.metafields.reviews.rating_count
-  assign ecg_rating_raw = ecg_product.metafields.reviews.rating.value
-  if ecg_rating_raw.rating
-    assign ecg_rating = ecg_rating_raw.rating
+  assign ecg_count = ecg_product.metafields.reviews.rating_count.value | default: ecg_product.metafields.reviews.rating_count | plus: 0
+  assign ecg_rating_obj = ecg_product.metafields.reviews.rating.value
+  if ecg_rating_obj.value != blank
+    assign ecg_rating = ecg_rating_obj.value
+  elsif ecg_rating_obj.rating != blank
+    assign ecg_rating = ecg_rating_obj.rating
   else
-    assign ecg_rating = ecg_rating_raw
+    assign ecg_rating = ecg_rating_obj
   endif
 %}
 {% if ecg_product != blank and ecg_count > 0 and ecg_rating != blank %}
