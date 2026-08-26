@@ -666,22 +666,23 @@ export default async function handler(request: any, response: any) {
     const ratingFiles: Array<{ filename: string; body: ReturnType<typeof textBody> }> = [
       { filename: RATING_SNIPPET_FILENAME, body: textBody(RATING_SNIPPET) },
     ];
-    for (const filename of ["snippets/card-product.liquid", "snippets/product-card.liquid"] as const) {
+    const cardRender =
+      `        {% comment %} ${RATING_MARKER} {% endcomment %}\n` +
+      `        {% render 'ecg-product-rating', product: product, card_product: card_product %}\n`;
+    for (const filename of [
+      "snippets/card-product.liquid",
+      "snippets/product-card.liquid",
+      "blocks/_product-card.liquid",
+      "blocks/product-card.liquid",
+    ] as const) {
       try {
         const existing = await readThemeFile(theme.id, filename);
         const content = existing.theme?.files?.nodes[0]?.body?.content;
         if (!content) continue;
         ratingFiles.push({
           filename,
-          body: textBody(
-            patchThemeSnippet(
-              content,
-              `        {% comment %} ${RATING_MARKER} {% endcomment %}\n` +
-                `        {% render 'ecg-product-rating', product: card_product %}\n`,
-            ),
-          ),
+          body: textBody(patchThemeSnippet(content, cardRender)),
         });
-        break;
       } catch {
         // Candidate snippet not present in this theme.
       }

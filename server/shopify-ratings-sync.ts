@@ -6,15 +6,22 @@ export const RATING_MARKER = "EcoShopGuide product rating";
 
 export const RATING_SNIPPET = `{% comment %} ${RATING_MARKER} {% endcomment %}
 {% liquid
-  assign ecg_count = product.metafields.reviews.rating_count.value | default: product.metafields.reviews.rating_count
-  assign ecg_rating_raw = product.metafields.reviews.rating.value
+  assign ecg_product = product
+  if card_product != blank
+    assign ecg_product = card_product
+  endif
+  if ecg_product == blank and closest.product != blank
+    assign ecg_product = closest.product
+  endif
+  assign ecg_count = ecg_product.metafields.reviews.rating_count.value | default: ecg_product.metafields.reviews.rating_count
+  assign ecg_rating_raw = ecg_product.metafields.reviews.rating.value
   if ecg_rating_raw.rating
     assign ecg_rating = ecg_rating_raw.rating
   else
     assign ecg_rating = ecg_rating_raw
   endif
 %}
-{% if ecg_count > 0 and ecg_rating != blank %}
+{% if ecg_product != blank and ecg_count > 0 and ecg_rating != blank %}
   <p class="ecg-product-rating" aria-label="Rated {{ ecg_rating | round: 1 }} out of 5 from {{ ecg_count }} reviews">
     <span aria-hidden="true">★</span> {{ ecg_rating | round: 1 }} ({{ ecg_count }})
   </p>
@@ -67,11 +74,20 @@ function ratingMetafieldValue(rating: number) {
 }
 
 export function patchThemeSnippet(content: string, renderLine: string): string {
-  if (content.includes(RATING_MARKER)) return content;
+  if (content.includes(RATING_MARKER)) {
+    // Refresh an older rating render to the latest line.
+    return content.replace(
+      /\{%\s*comment\s*%\}\s*EcoShopGuide product rating\s*\{%\s*endcomment\s*%\}\s*\{%\s*render\s+'ecg-product-rating'[^%]*%\}\s*/g,
+      renderLine,
+    );
+  }
 
   const patterns = [
     /\{%[-\s]*render\s+['"]price['"]/,
+    /\{%[-\s]*render\s+['"]price-list['"]/,
     /<div class="card-information"/,
+    /class="[^"]*product-card__price/,
+    /class="[^"]*price-list/,
     /<div class="product__title"/,
     /<h1[^>]*class="[^"]*product[^"]*title/,
   ];
