@@ -2,6 +2,14 @@ import {
   ShopifyAdminRequestError,
   shopifyAdminRequest,
 } from "../server/shopify-admin.js";
+import {
+  RATING_MARKER,
+  RATING_SNIPPET,
+  RATING_SNIPPET_FILENAME,
+  appendRatingCss,
+  patchThemeSnippet,
+  syncVerifiedCollectiveRatings,
+} from "../server/shopify-ratings-sync.js";
 
 type Theme = { id: string; name: string; role: string };
 
@@ -655,12 +663,57 @@ export default async function handler(request: any, response: any) {
 
     // Shopify validates JSON templates against the sections already present in the
     // theme. Upload the section definitions before the templates that reference them.
+    const ratingFiles: Array<{ filename: string; body: ReturnType<typeof textBody> }> = [
+      { filename: RATING_SNIPPET_FILENAME, body: textBody(RATING_SNIPPET) },
+    ];
+    for (const filename of ["snippets/card-product.liquid", "snippets/product-card.liquid"] as const) {
+      try {
+        const existing = await readThemeFile(theme.id, filename);
+        const content = existing.theme?.files?.nodes[0]?.body?.content;
+        if (!content) continue;
+        ratingFiles.push({
+          filename,
+          body: textBody(
+            patchThemeSnippet(
+              content,
+              `        {% comment %} ${RATING_MARKER} {% endcomment %}\n` +
+                `        {% render 'ecg-product-rating', product: card_product %}\n`,
+            ),
+          ),
+        });
+        break;
+      } catch {
+        // Candidate snippet not present in this theme.
+      }
+    }
+    for (const filename of ["sections/main-product.liquid", "sections/product-template.liquid"] as const) {
+      try {
+        const existing = await readThemeFile(theme.id, filename);
+        const content = existing.theme?.files?.nodes[0]?.body?.content;
+        if (!content) continue;
+        ratingFiles.push({
+          filename,
+          body: textBody(
+            patchThemeSnippet(
+              content,
+              `        {% comment %} ${RATING_MARKER} {% endcomment %}\n` +
+                `        {% render 'ecg-product-rating', product: product %}\n`,
+            ),
+          ),
+        });
+        break;
+      } catch {
+        // Candidate product section not present in this theme.
+      }
+    }
+
     const foundationUpdate = await upsertThemeFiles(
       [
-        { filename: `assets/${PREMIUM_STYLESHEET}`, body: textBody(PREMIUM_CSS) },
+        { filename: `assets/${PREMIUM_STYLESHEET}`, body: textBody(appendRatingCss(PREMIUM_CSS)) },
         { filename: "layout/theme.liquid", body: textBody(updatedLayout) },
         { filename: HOME_SECTION_FILENAME, body: textBody(HOME_SECTION) },
         { filename: COLLECTION_SECTION_FILENAME, body: textBody(COLLECTION_SECTION) },
+        ...ratingFiles,
       ],
       "foundation",
     );
@@ -770,6 +823,10 @@ export default async function handler(request: any, response: any) {
       throw new ShopifyAdminRequestError("Shopify did not persist the active theme update.");
     }
 
+    // Write verified Collective aggregates into standard Shopify rating metafields
+    // so the live theme can render stars without a separate serverless function.
+    const ratingsSync = await syncVerifiedCollectiveRatings();
+
     response.status(200).json({
       ok: true,
       theme: { id: theme.id, name: theme.name, role: theme.role },
@@ -782,6 +839,7 @@ export default async function handler(request: any, response: any) {
         ...foundationUpdate.upsertedThemeFiles,
         ...templateUpdate.upsertedThemeFiles,
       ].map((file) => file.filename),
+      ratings: ratingsSync,
       homepageTemplate: { filename: templateFilename, format: templateFormat },
       collectionTemplate: {
         filename: collectionTemplateFilename,
