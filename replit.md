@@ -1,7 +1,7 @@
-# Eco Shop Guide Essentials Storefront
+# Bambana Essentials Storefront
 
 ## Overview
-The Eco Shop Guide Essentials Storefront is a conversion-optimized e-commerce platform designed to streamline the online shopping experience for sustainable home and wellness products. It aims to reduce the Pinterest-to-purchase friction to two steps, leveraging a modern, eco-friendly aesthetic. Built with React and Express, it features a single-click purchase flow via Stripe, with Shopify handling backend fulfillment. The project prioritizes mobile-first design, prominent trust signals, and fast loading times to maximize conversion rates among environmentally conscious consumers.
+The Bambana Essentials Storefront is a conversion-optimized e-commerce platform designed to streamline the online shopping experience for sustainable home and wellness products. It aims to reduce the Pinterest-to-purchase friction to two steps, leveraging a modern, eco-friendly aesthetic. Built with React and Express, it features a single-click purchase flow via Stripe, with Shopify handling backend fulfillment. The project prioritizes mobile-first design, prominent trust signals, and fast loading times to maximize conversion rates among environmentally conscious consumers.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.

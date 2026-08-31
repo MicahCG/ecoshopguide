@@ -34,7 +34,7 @@ export default function TermsOfService() {
               className="text-lg text-muted-foreground leading-relaxed"
               data-testid="text-page-intro"
             >
-              Please read these Terms of Service carefully before using EcoShopGuide.
+              Please read these Terms of Service carefully before using Bambana.
             </p>
           </div>
         </div>
@@ -49,7 +49,7 @@ export default function TermsOfService() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                By accessing and using EcoShopGuide, you accept and agree to be bound by these Terms of Service.
+                By accessing and using Bambana, you accept and agree to be bound by these Terms of Service.
                 If you do not agree to these terms, please do not use our website or services.
               </p>
             </CardContent>
@@ -116,7 +116,7 @@ export default function TermsOfService() {
             <CardContent className="space-y-3">
               <p className="text-muted-foreground">
                 All content on this website, including text, graphics, logos, images, and software, is the 
-                property of EcoShopGuide or its content suppliers and is protected by copyright and
+                property of Bambana or its content suppliers and is protected by copyright and
                 intellectual property laws.
               </p>
               <p className="text-muted-foreground">
@@ -132,7 +132,7 @@ export default function TermsOfService() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                EcoShopGuide participates in affiliate marketing programs. We may earn commissions from 
+                Bambana participates in affiliate marketing programs. We may earn commissions from
                 qualifying purchases made through affiliate links on our website. This does not affect the 
                 price you pay, and we only recommend products we genuinely believe in.
               </p>
@@ -186,7 +186,7 @@ export default function TermsOfService() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                To the fullest extent permitted by law, EcoShopGuide shall not be liable for any
+                To the fullest extent permitted by law, Bambana shall not be liable for any
                 indirect, incidental, special, consequential, or punitive damages, including loss of 
                 profits, data, or use, arising from your use of our website or services.
               </p>
@@ -199,7 +199,7 @@ export default function TermsOfService() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                You agree to indemnify and hold harmless EcoShopGuide from any claims, damages, losses,
+                You agree to indemnify and hold harmless Bambana from any claims, damages, losses,
                 liabilities, and expenses arising from your use of our website, violation of these terms, 
                 or infringement of any third-party rights.
               </p>
@@ -254,7 +254,7 @@ export default function TermsOfService() {
 
           <div className="mt-8 p-4 bg-muted/50 rounded-lg border border-border">
             <p className="text-sm text-muted-foreground text-center italic">
-              By using EcoShopGuide, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.
+              By using Bambana, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.
             </p>
           </div>
         </div>

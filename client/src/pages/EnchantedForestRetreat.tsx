@@ -44,10 +44,10 @@ const PRODUCTS = [
 
 export default function EnchantedForestRetreat() {
   usePageSEO({
-    title: "Enchanted Forest Retreat Decor Ideas | EcoShopGuide",
+    title: "Enchanted Forest Retreat Decor Ideas | Bambana",
     description:
       "Step into the glow of an Enchanted Forest Haven. Shop moody greens, warm wood tones, iron lanterns, and vintage Persian rugs that bring woodland fairy-tale magic to your celebration or home.",
-    canonical: "https://ecoshopguide.com/pages/enchanted-forest-retreat",
+    canonical: "https://shopbambana.com/pages/enchanted-forest-retreat",
   });
 
   return (

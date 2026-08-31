@@ -1,5 +1,5 @@
 # Google Analytics 4 Tracking Guide
-**EcoShopGuide - Complete Implementation**
+**Bambana - Complete Implementation**
 
 ## 📊 Your GA4 Measurement ID
 `G-JWZKR16JFE`

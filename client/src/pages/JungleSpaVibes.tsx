@@ -43,10 +43,10 @@ const PRODUCTS = [
 
 export default function JungleSpaVibes() {
   usePageSEO({
-    title: "Jungle Spa Vibes Decor Ideas | EcoShopGuide",
+    title: "Jungle Spa Vibes Decor Ideas | Bambana",
     description:
       "Bring Bali pavilion energy home with jungle spa vibes: canopied daybeds, scattered candles, tropical greenery, timber beams, and woven jute rugs. Eco-friendly wellness sanctuary decor.",
-    canonical: "https://ecoshopguide.com/pages/jungle-spa-vibes",
+    canonical: "https://shopbambana.com/pages/jungle-spa-vibes",
   });
 
   return (

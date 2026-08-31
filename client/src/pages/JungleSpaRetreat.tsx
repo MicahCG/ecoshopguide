@@ -43,10 +43,10 @@ const PRODUCTS = [
 
 export default function JungleSpaRetreat() {
   usePageSEO({
-    title: "Jungle Spa Retreat Decor Ideas | EcoShopGuide",
+    title: "Jungle Spa Retreat Decor Ideas | Bambana",
     description:
       "Create an at-home jungle spa retreat with reclaimed wood walls, trailing ferns, iron lanterns, and a sunken soaking tub. Eco-friendly spa decor for a slow-living sanctuary.",
-    canonical: "https://ecoshopguide.com/pages/jungle-spa-retreat",
+    canonical: "https://shopbambana.com/pages/jungle-spa-retreat",
   });
 
   return (

@@ -11,7 +11,7 @@ import {
 } from "@/data/ideaLists";
 
 /**
- * Home page, rebuilt from the design reference "EcoShopGuide Storefront.dc.html"
+ * Home page, rebuilt from the design reference "Bambana Storefront.dc.html"
  * (variant A — editorial-first): hero → category rail → "Why we picked it" →
  * product grid.
  *

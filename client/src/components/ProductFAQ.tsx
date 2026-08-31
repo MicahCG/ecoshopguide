@@ -34,7 +34,7 @@ const defaultFaqItems = [
       'Care instructions vary by product material. Generally, we recommend gentle cleaning with a damp cloth for most items. Specific care details are included in the product description and will be included with your order. Quality materials mean less maintenance overall!',
   },
   {
-    question: 'What makes EcoShopGuide different?',
+    question: 'What makes Bambana different?',
     answer:
       'We\'re not a marketplace with 50,000 listings. We carry a curated selection of pieces we personally love, with free shipping on everything and real human support.',
   },

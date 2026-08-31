@@ -25,12 +25,12 @@ app.use('/attached_assets', express.static(path.resolve(process.cwd(), 'attached
 // Domain redirect middleware
 app.use((req, res, next) => {
   const host = req.headers.host || '';
-  const primaryDomain = 'ecoshopguide.com';
-  const wwwDomain = 'www.ecoshopguide.com';
+  const primaryDomain = 'shopbambana.com';
+  const wwwDomain = 'www.shopbambana.com';
   const protocol = req.headers['x-forwarded-proto'] || 'https';
 
   // Skip redirects for API routes to prevent CORS issues
-  // (www.ecoshopguide.com -> ecoshopguide.com redirect breaks fetch requests)
+  // (www.shopbambana.com -> shopbambana.com redirect breaks fetch requests)
   if (req.path.startsWith('/api/')) {
     return next();
   }

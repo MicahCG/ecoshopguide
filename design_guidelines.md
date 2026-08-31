@@ -1,4 +1,4 @@
-# Design Guidelines: Eco Shop Guide Essentials Storefront
+# Design Guidelines: Bambana Essentials Storefront
 
 ## Design Approach
 **Reference-Based Approach**: Drawing inspiration from premium sustainable e-commerce sites (Goop, The Sill, Package Free) combined with Shopify's clean product-focused layouts. The design must match the existing Webflow site aesthetic while optimizing for conversion with trust signals and minimal friction.

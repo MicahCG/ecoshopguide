@@ -25,9 +25,9 @@ export default function FallHalloweenCollection() {
   const query = useQuery({ queryKey: ["shopify", "fall-halloween"], queryFn: loadFallHalloweenCollection, staleTime: 60_000, retry: 1 });
   const products = query.data?.products ?? [];
   usePageSEO({
-    title: "Cozy Fall & Halloween Home | EcoShopGuide",
-    description: "A warm seasonal edit for an inviting entryway, table, and home—curated from the current EcoShopGuide shop catalog.",
-    canonical: "https://www.ecoshopguide.com/shop-the-look/fall-halloween",
+    title: "Cozy Fall & Halloween Home | Bambana",
+    description: "A warm seasonal edit for an inviting entryway, table, and home—curated from the current Bambana shop catalog.",
+    canonical: "https://www.shopbambana.com/shop-the-look/fall-halloween",
   });
   useEffect(() => {
     if (query.data) ecoTrack("view_category", { category_id: query.data.id, category_name: query.data.title, item_count: products.length, collection: "fall-halloween" });

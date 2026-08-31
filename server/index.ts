@@ -23,8 +23,8 @@ app.use('/attached_assets', express.static(path.resolve(import.meta.dirname, '..
 
 app.use((req, res, next) => {
   const host = req.headers.host || '';
-  const primaryDomain = 'ecoshopguide.com';
-  const wwwDomain = 'www.ecoshopguide.com';
+  const primaryDomain = 'shopbambana.com';
+  const wwwDomain = 'www.shopbambana.com';
   const protocol = req.headers['x-forwarded-proto'] || 'https';
 
   // Skip redirects for API routes to prevent CORS issues
@@ -106,7 +106,7 @@ app.use((req, res, next) => {
   }
   
   // Everything else → redirect to homepage with full domain
-  return res.redirect(301, 'https://ecoshopguide.com');
+  return res.redirect(301, 'https://shopbambana.com');
 });
 
 app.use((req, res, next) => {

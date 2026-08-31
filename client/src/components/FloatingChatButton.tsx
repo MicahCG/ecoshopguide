@@ -34,7 +34,7 @@ export default function FloatingChatButton() {
 
   const handleClick = () => {
     trackChatButtonClick();
-    window.location.href = 'mailto:livebambana@gmail.com?subject=Question about EcoShopGuide';
+    window.location.href = 'mailto:livebambana@gmail.com?subject=Question about Bambana';
   };
 
   return (

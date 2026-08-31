@@ -43,10 +43,10 @@ const PRODUCTS = [
 
 export default function CozyDormRoom() {
   usePageSEO({
-    title: "Cozy Dorm Room Decor Ideas | EcoShopGuide",
+    title: "Cozy Dorm Room Decor Ideas | Bambana",
     description:
       "Transform your dorm room with cozy, eco-friendly decor: white linen bedding, warm fairy lights, hanging plants, Moroccan rugs, and a personal gallery wall. Budget-friendly dorm ideas.",
-    canonical: "https://ecoshopguide.com/pages/cozy-dorm-room",
+    canonical: "https://shopbambana.com/pages/cozy-dorm-room",
   });
 
   return (

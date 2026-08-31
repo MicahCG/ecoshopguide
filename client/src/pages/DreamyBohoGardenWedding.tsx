@@ -43,10 +43,10 @@ const PRODUCTS = [
 
 export default function DreamyBohoGardenWedding() {
   usePageSEO({
-    title: "Dreamy Boho Garden Wedding Decor Ideas | EcoShopGuide",
+    title: "Dreamy Boho Garden Wedding Decor Ideas | Bambana",
     description:
       "Discover a dreamy boho garden wedding aesthetic with blush florals, gold chairs, lantern chandeliers, and floating candles. Curated eco-friendly picks for your perfect garden reception.",
-    canonical: "https://ecoshopguide.com/pages/dreamy-boho-garden-wedding",
+    canonical: "https://shopbambana.com/pages/dreamy-boho-garden-wedding",
   });
 
   return (

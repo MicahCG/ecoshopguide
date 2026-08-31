@@ -331,7 +331,7 @@ export const IDEA_LIST_CATEGORIES: IdeaListCategory[] = [
   {
     slug: "green-wellness",
     title: "Green Wellness",
-    eyebrow: "EcoShopGuide Idea List",
+    eyebrow: "Bambana Idea List",
     shortDescription:
       "Trailing plants, candlelight, and spa-quiet textures for a restorative home sanctuary.",
     heroDescription:
@@ -393,7 +393,7 @@ export const IDEA_LIST_CATEGORIES: IdeaListCategory[] = [
   {
     slug: "weddings",
     title: "Weddings",
-    eyebrow: "EcoShopGuide Idea List",
+    eyebrow: "Bambana Idea List",
     shortDescription:
       "Lanterns, florals, and table styling for an event that feels effortlessly romantic.",
     heroDescription:
@@ -432,7 +432,7 @@ export const IDEA_LIST_CATEGORIES: IdeaListCategory[] = [
   {
     slug: "dorm-rooms",
     title: "Dorm Rooms",
-    eyebrow: "EcoShopGuide Idea List",
+    eyebrow: "Bambana Idea List",
     shortDescription:
       "Cozy lighting, smart storage, and budget-friendly styling for a dorm that feels like home.",
     heroDescription:
@@ -465,7 +465,7 @@ export const IDEA_LIST_CATEGORIES: IdeaListCategory[] = [
   {
     slug: "small-spaces",
     title: "Small Spaces",
-    eyebrow: "EcoShopGuide Idea List",
+    eyebrow: "Bambana Idea List",
     shortDescription:
       "Multifunctional pieces and vertical storage that make compact rooms feel open and considered.",
     heroDescription:
@@ -504,7 +504,7 @@ export const IDEA_LIST_CATEGORIES: IdeaListCategory[] = [
   {
     slug: "living-rooms",
     title: "Living Rooms",
-    eyebrow: "EcoShopGuide Idea List",
+    eyebrow: "Bambana Idea List",
     shortDescription:
       "Layered textures, warm lighting, and natural decor for a living room that feels like a hug.",
     heroDescription:

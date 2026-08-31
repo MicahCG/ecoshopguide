@@ -6,10 +6,10 @@ interface PageSEOOptions {
   canonical?: string;
 }
 
-const DEFAULT_TITLE = 'EcoShopGuide | Sustainable Living, Simplified';
+const DEFAULT_TITLE = 'Bambana | Sustainable Living, Simplified';
 const DEFAULT_DESC =
-  'EcoShopGuide - curated guides and tips for sustainable, eco-friendly shopping. Hand-picked by a family-founded team in Austin.';
-const DEFAULT_CANONICAL = 'https://ecoshopguide.com';
+  'Bambana - curated guides and tips for sustainable, eco-friendly shopping. Hand-picked by a family-founded team in Austin.';
+const DEFAULT_CANONICAL = 'https://shopbambana.com';
 
 /**
  * Updates <title>, <meta name="description">, <link rel="canonical">,

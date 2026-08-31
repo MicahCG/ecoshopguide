@@ -8,7 +8,7 @@ export default function Footer({ showAffiliateDisclosure = true }: { showAffilia
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 text-center">
           <p className="text-xs text-muted-foreground leading-relaxed">
             <span className="font-semibold text-foreground">Affiliate Disclosure:</span>{' '}
-            EcoShopGuide participates in affiliate programmes. We may earn a
+            Bambana participates in affiliate programmes. We may earn a
             small commission when you shop through our links, at no extra cost
             to you. We only recommend products we genuinely stand behind.{' '}
             <Link href="/pages/terms-of-service">
@@ -29,7 +29,7 @@ export default function Footer({ showAffiliateDisclosure = true }: { showAffilia
               className="font-serif font-bold text-base sm:text-lg mb-3 sm:mb-4"
               data-testid="footer-brand"
             >
-              EcoShopGuide
+              Bambana
             </h3>
             <p
               className="text-muted-foreground text-xs sm:text-sm leading-relaxed"
@@ -138,7 +138,7 @@ export default function Footer({ showAffiliateDisclosure = true }: { showAffilia
             </svg>
           </a>
           <p data-testid="footer-copyright">
-            &copy; {new Date().getFullYear()} EcoShopGuide. All rights
+            &copy; {new Date().getFullYear()} Bambana. All rights
             reserved.
           </p>
         </div>

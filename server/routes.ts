@@ -79,7 +79,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const parsed = analyticsEventSchema.safeParse(req.body);
     if (!parsed.success) return res.status(400).json({ error: "Invalid analytics event." });
     const origin = String(req.headers.origin || "");
-    if (origin && !new Set(["https://ecoshopguide.com", "https://www.ecoshopguide.com"]).has(origin)) {
+    if (origin && !new Set(["https://shopbambana.com", "https://www.shopbambana.com"]).has(origin)) {
       return res.status(403).json({ error: "Invalid analytics origin." });
     }
     try {

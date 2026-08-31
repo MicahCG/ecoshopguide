@@ -262,7 +262,7 @@ async function seedSmallSpacesReviews() {
 
     // Fetch products from production API
     console.log('Fetching products from production API...');
-    const response = await fetch('https://www.ecoshopguide.com/api/products');
+    const response = await fetch('https://www.shopbambana.com/api/products');
     const allProducts = await response.json();
 
     if (!allProducts || allProducts.length === 0) {

@@ -7,10 +7,10 @@ import { IDEA_LIST_CATEGORIES } from "@/data/ideaLists";
 
 export default function ShopTheLook() {
   usePageSEO({
-    title: "Shop the Look - Curated Idea Lists | EcoShopGuide",
+    title: "Shop the Look - Curated Idea Lists | Bambana",
     description:
-      "Curated EcoShopGuide idea lists for weddings, dorms, small spaces, living rooms, and green wellness. Shop the look with hand-picked product picks.",
-    canonical: "https://ecoshopguide.com/shop-the-look",
+      "Curated Bambana idea lists for weddings, dorms, small spaces, living rooms, and green wellness. Shop the look with hand-picked product picks.",
+    canonical: "https://shopbambana.com/shop-the-look",
   });
 
   return (

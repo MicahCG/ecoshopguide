@@ -8,10 +8,10 @@ import { usePageSEO } from '@/hooks/usePageSEO';
 
 export default function Contact() {
   usePageSEO({
-    title: 'Contact Us | EcoShopGuide',
+    title: 'Contact Us | Bambana',
     description:
-      'Get in touch with the EcoShopGuide team. Reach out with questions, collaboration ideas, or feedback — we love hearing from our community.',
-    canonical: 'https://ecoshopguide.com/pages/contact',
+      'Get in touch with the Bambana team. Reach out with questions, collaboration ideas, or feedback — we love hearing from our community.',
+    canonical: 'https://shopbambana.com/pages/contact',
   });
 
   return (
@@ -120,7 +120,7 @@ export default function Contact() {
               className="text-primary hover:underline"
               data-testid="link-pinterest"
             >
-              Pinterest @ecoshopguide
+              Pinterest
             </a>
             .
           </div>

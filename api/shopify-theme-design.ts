@@ -24,13 +24,13 @@ type ThemeLayoutResponse = {
 };
 
 const PREMIUM_STYLESHEET = "ecoshopguide-premium.css";
-const PREMIUM_MARKER = "EcoShopGuide premium storefront";
-const HOME_MARKER = "EcoShopGuide collection-first homepage";
+const PREMIUM_MARKER = "Bambana premium storefront";
+const HOME_MARKER = "Bambana collection-first homepage";
 const HOME_SECTION_FILENAME = "sections/ecg-home-hero.liquid";
 const HOME_JSON_TEMPLATE_FILENAME = "templates/index.json";
 const HOME_LIQUID_TEMPLATE_FILENAME = "templates/index.liquid";
 const HOME_SECTION_TAG = "{% section 'ecg-home-hero' %}";
-const COLLECTION_MARKER = "EcoShopGuide collection context hero";
+const COLLECTION_MARKER = "Bambana collection context hero";
 const COLLECTION_SECTION_FILENAME = "sections/ecg-collection-hero.liquid";
 const COLLECTION_JSON_TEMPLATE_FILENAME = "templates/collection.json";
 const COLLECTION_LIQUID_TEMPLATE_FILENAME = "templates/collection.liquid";
@@ -59,7 +59,7 @@ const HOME_SECTION = `{% comment %} ${HOME_MARKER} {% endcomment %}
   </section>
 {% schema %}
 {
-  "name": "EcoShopGuide home hero",
+  "name": "Bambana home hero",
   "tag": "section",
   "class": "ecg-home-hero-section",
   "settings": []
@@ -69,7 +69,7 @@ const HOME_SECTION = `{% comment %} ${HOME_MARKER} {% endcomment %}
 const COLLECTION_SECTION = `{% comment %} ${COLLECTION_MARKER} {% endcomment %}
 {% liquid
   assign ecg_handle = collection.handle
-  assign ecg_eyebrow = 'The EcoShopGuide edit'
+  assign ecg_eyebrow = 'The Bambana edit'
   assign ecg_title = collection.title
   assign ecg_copy = collection.description | strip_html
   assign ecg_note = 'Thoughtfully collected for the way you live.'
@@ -110,7 +110,7 @@ const COLLECTION_SECTION = `{% comment %} ${COLLECTION_MARKER} {% endcomment %}
   "settings": []
 }
 {% endschema %}`;
-const PREMIUM_CSS = `/* EcoShopGuide premium storefront polish */
+const PREMIUM_CSS = `/* Bambana premium storefront polish */
 :root {
   --ecg-ink: #17382f;
   --ecg-forest: #245442;
@@ -522,7 +522,7 @@ function injectStylesheet(layout: string) {
   // Replace every prior version of this stylesheet link. A previous version
   // accidentally used an `assets/` prefix before `asset_url`, which produced
   // an `assets/assets/...` URL on the storefront.
-  const existingPremiumAsset = /(?:\{% comment %\}\s*EcoShopGuide premium storefront\s*\{% endcomment %\}\s*)?(?:\{\{\s*'[^']*ecoshopguide-premium\.css'\s*\|\s*asset_url\s*\|\s*stylesheet_tag\s*\}\}|<link[^>]*ecoshopguide-premium\.css[^>]*>)/g;
+  const existingPremiumAsset = /(?:\{% comment %\}\s*(?:EcoShopGuide|Bambana) premium storefront\s*\{% endcomment %\}\s*)?(?:\{\{\s*'[^']*ecoshopguide-premium\.css'\s*\|\s*asset_url\s*\|\s*stylesheet_tag\s*\}\}|<link[^>]*ecoshopguide-premium\.css[^>]*>)/g;
   const tag = `{% comment %} ${PREMIUM_MARKER} {% endcomment %}\n{{ '${PREMIUM_STYLESHEET}' | asset_url | stylesheet_tag }}`;
   if (!layout.includes("</head>")) {
     throw new ShopifyAdminRequestError("The active Shopify theme has no head element to update.");
@@ -571,7 +571,7 @@ function buildLegacyHomeTemplate(existingTemplate: string) {
 
   // This is the active homepage template in older Shopify themes. Keeping the
   // template intentionally small lets the native theme header/footer remain in
-  // control while the collection-first EcoShopGuide experience owns the page.
+  // control while the collection-first Bambana experience owns the page.
   return `${HOME_SECTION_TAG}\n`;
 }
 
@@ -810,7 +810,7 @@ export default async function handler(request: any, response: any) {
       }
     }
 
-    // Non-template theme files that contain the EcoShopGuide card markup.
+    // Non-template theme files that contain the Bambana card markup.
     try {
       for (const file of await listThemeTextFiles(theme.id)) {
         const filename = file.filename;

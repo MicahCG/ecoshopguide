@@ -8,10 +8,10 @@ import { usePageSEO } from '@/hooks/usePageSEO';
 
 export default function PrivacyPolicy() {
   usePageSEO({
-    title: 'Privacy Policy | EcoShopGuide',
+    title: 'Privacy Policy | Bambana',
     description:
-      'Read the EcoShopGuide Privacy Policy to understand how we collect, use, and protect your information, including our use of Google AdSense and affiliate links.',
-    canonical: 'https://ecoshopguide.com/pages/privacy-policy',
+      'Read the Bambana Privacy Policy to understand how we collect, use, and protect your information, including our use of Google AdSense and affiliate links.',
+    canonical: 'https://shopbambana.com/pages/privacy-policy',
   });
 
   return (
@@ -39,7 +39,7 @@ export default function PrivacyPolicy() {
               className="text-lg text-muted-foreground leading-relaxed"
               data-testid="text-page-intro"
             >
-              At EcoShopGuide, we respect your privacy and are committed to
+              At Bambana, we respect your privacy and are committed to
               protecting your personal information.
             </p>
           </div>
@@ -121,7 +121,7 @@ export default function PrivacyPolicy() {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
-                EcoShopGuide uses <strong>Google AdSense</strong> to display
+                Bambana uses <strong>Google AdSense</strong> to display
                 advertisements. Google AdSense uses cookies to serve ads based
                 on your prior visits to this site and other sites on the
                 internet.
@@ -204,7 +204,7 @@ export default function PrivacyPolicy() {
             </CardHeader>
             <CardContent className="space-y-3">
               <p className="text-muted-foreground">
-                EcoShopGuide participates in affiliate marketing programmes,
+                Bambana participates in affiliate marketing programmes,
                 including those managed through Impact.com. When you click an
                 affiliate link and make a purchase, we may earn a small
                 commission at no extra cost to you.

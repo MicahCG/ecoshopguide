@@ -47,7 +47,7 @@ export default function ReturnPolicy() {
               className="text-lg text-muted-foreground leading-relaxed"
               data-testid="text-page-intro"
             >
-              At EcoShopGuide, we want you to love your purchase. If you're
+              At Bambana, we want you to love your purchase. If you're
               not completely satisfied with your order, we're here to help.
             </p>
           </div>
@@ -345,7 +345,7 @@ export default function ReturnPolicy() {
 
           <div className="mt-8 p-4 bg-muted/50 rounded-lg border border-border">
             <p className="text-sm text-muted-foreground text-center italic">
-              By making a purchase from EcoShopGuide, you agree to this Return
+              By making a purchase from Bambana, you agree to this Return
               & Refund Policy.
             </p>
           </div>

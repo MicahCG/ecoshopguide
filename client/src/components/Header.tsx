@@ -78,11 +78,11 @@ export default function Header() {
             >
               <img
                 src={logoImage}
-                alt="EcoShopGuide"
+                alt="Bambana"
                 className="h-8 w-8 flex-shrink-0"
               />
               <span className="hidden sm:inline text-lg font-serif font-bold whitespace-nowrap">
-                EcoShopGuide
+                Bambana
               </span>
             </div>
           </Link>

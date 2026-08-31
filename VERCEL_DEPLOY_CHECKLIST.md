@@ -82,11 +82,11 @@ Visit your Vercel URL and test:
 ### Update Stripe Webhook
 1. Go to [dashboard.stripe.com/webhooks](https://dashboard.stripe.com/webhooks)
 2. Update webhook URL to: `https://your-vercel-url.vercel.app/api/webhook`
-3. Or: `https://ecoshopguide.com/api/webhook` (once custom domain is configured)
+3. Or: `https://shopbambana.com/api/webhook` (once custom domain is configured)
 
 ### Add Custom Domain (Optional)
 1. Vercel → Your Project → Settings → Domains
-2. Add `ecoshopguide.com` and `www.ecoshopguide.com`
+2. Add `shopbambana.com` and `www.shopbambana.com`
 3. Update DNS records as shown in Vercel
 4. Wait for DNS propagation (2-48 hours)
 

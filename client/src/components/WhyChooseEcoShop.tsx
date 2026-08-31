@@ -27,7 +27,7 @@ export default function WhyChooseEcoShop() {
   return (
     <div className="mt-6 sm:mt-8">
       <h3 className="text-base font-semibold mb-3 text-foreground">
-        Why Choose EcoShopGuide?
+        Why Choose Bambana?
       </h3>
       <div className="grid grid-cols-2 gap-3">
         {trustItems.map((item) => {

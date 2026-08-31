@@ -43,10 +43,10 @@ const PRODUCTS = [
 
 export default function CozyApartmentLivingRoom() {
   usePageSEO({
-    title: "Cozy Apartment Living Room Decor Ideas | EcoShopGuide",
+    title: "Cozy Apartment Living Room Decor Ideas | Bambana",
     description:
       "Small living room ideas for your first apartment: linen sofas, macrame planters, woven baskets, and cozy fireplace styling. Budget-friendly eco decor for any apartment living room.",
-    canonical: "https://ecoshopguide.com/pages/cozy-apartment-living-room",
+    canonical: "https://shopbambana.com/pages/cozy-apartment-living-room",
   });
 
   return (

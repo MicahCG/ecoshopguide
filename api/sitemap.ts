@@ -13,13 +13,13 @@ export default async function handler(
 
   // Static pages with priorities
   const staticPages = [
-    { loc: 'https://www.ecoshopguide.com/', changefreq: 'weekly', priority: '1.0' },
-    { loc: 'https://www.ecoshopguide.com/blog', changefreq: 'daily', priority: '0.9' },
-    { loc: 'https://www.ecoshopguide.com/shop-the-look', changefreq: 'weekly', priority: '0.9' },
-    { loc: 'https://www.ecoshopguide.com/pages/about', changefreq: 'monthly', priority: '0.7' },
-    { loc: 'https://www.ecoshopguide.com/pages/contact', changefreq: 'monthly', priority: '0.6' },
-    { loc: 'https://www.ecoshopguide.com/pages/privacy-policy', changefreq: 'yearly', priority: '0.5' },
-    { loc: 'https://www.ecoshopguide.com/pages/terms-of-service', changefreq: 'yearly', priority: '0.5' },
+    { loc: 'https://www.shopbambana.com/', changefreq: 'weekly', priority: '1.0' },
+    { loc: 'https://www.shopbambana.com/blog', changefreq: 'daily', priority: '0.9' },
+    { loc: 'https://www.shopbambana.com/shop-the-look', changefreq: 'weekly', priority: '0.9' },
+    { loc: 'https://www.shopbambana.com/pages/about', changefreq: 'monthly', priority: '0.7' },
+    { loc: 'https://www.shopbambana.com/pages/contact', changefreq: 'monthly', priority: '0.6' },
+    { loc: 'https://www.shopbambana.com/pages/privacy-policy', changefreq: 'yearly', priority: '0.5' },
+    { loc: 'https://www.shopbambana.com/pages/terms-of-service', changefreq: 'yearly', priority: '0.5' },
   ];
 
   // Shop the Look pages
@@ -55,7 +55,7 @@ export default async function handler(
           ? new Date(blog.created_at).toISOString().split('T')[0]
           : new Date().toISOString().split('T')[0];
         return `  <url>
-    <loc>https://www.ecoshopguide.com/blog/${blog.slug}</loc>
+    <loc>https://www.shopbambana.com/blog/${blog.slug}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -82,7 +82,7 @@ ${staticPages.map(p => `  <url>
 
   <!-- Shop the Look pages -->
 ${shopTheLookPages.map(slug => `  <url>
-    <loc>https://www.ecoshopguide.com/pages/${slug}</loc>
+    <loc>https://www.shopbambana.com/pages/${slug}</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>`).join('\n')}

@@ -196,14 +196,14 @@ export default function IdeaListCategoryPage() {
 
   usePageSEO({
     title: category
-      ? `${category.title} Idea List - Shop the Look | EcoShopGuide`
-      : "Idea List | EcoShopGuide",
+      ? `${category.title} Idea List - Shop the Look | Bambana`
+      : "Idea List | Bambana",
     description: category
       ? `${category.title} idea list - curated product picks to recreate the look. ${category.shortDescription}`
-      : "Curated EcoShopGuide idea lists.",
+      : "Curated Bambana idea lists.",
     canonical: category
-      ? `https://ecoshopguide.com/shop-the-look/${category.slug}`
-      : "https://ecoshopguide.com/shop-the-look",
+      ? `https://shopbambana.com/shop-the-look/${category.slug}`
+      : "https://shopbambana.com/shop-the-look",
   });
 
   const hasEssentials = (category?.essentials.length ?? 0) > 0;

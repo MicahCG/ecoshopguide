@@ -140,7 +140,7 @@ async function seedPlantStandReviews() {
 
     // First, fetch products to find the plant stand
     console.log('📦 Fetching products to find plant stand...');
-    const response = await fetch('https://www.ecoshopguide.com/api/products');
+    const response = await fetch('https://www.shopbambana.com/api/products');
     const allProducts = await response.json();
 
     // Find the plant stand product by ID or by title

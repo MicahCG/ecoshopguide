@@ -1,4 +1,4 @@
-# ads.txt — Authorised Digital Sellers file for EcoShopGuide
+# ads.txt — Authorised Digital Sellers file for Bambana
 # IMPORTANT: Replace ca-pub-XXXXXXXXXXXXXXXXXX with your actual AdSense Publisher ID
 # before deploying. Your publisher ID can be found in your AdSense account at:
 #   https://www.google.com/adsense → Account → Account information → Publisher ID

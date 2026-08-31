@@ -1,4 +1,4 @@
-# Vercel Deployment Guide - EcoShopGuide
+# Vercel Deployment Guide - Bambana
 
 ## 🚀 Quick Deploy to Vercel
 
@@ -89,25 +89,25 @@ Vercel should auto-detect these, but verify:
 
 ## Step 6: Configure Custom Domain (Optional)
 
-### Add ecoshopguide.com to Vercel:
+### Add shopbambana.com to Vercel:
 
 1. Go to your project **Settings** → **Domains**
-2. Add domain: `ecoshopguide.com`
-3. Add domain: `www.ecoshopguide.com` (will redirect to non-www)
+2. Add domain: `shopbambana.com`
+3. Add domain: `www.shopbambana.com` (will redirect to non-www)
 4. Vercel will provide DNS instructions
 
 ### Update DNS Records:
 
 Add these records in your domain registrar (e.g., GoDaddy, Namecheap):
 
-**For ecoshopguide.com:**
+**For shopbambana.com:**
 ```
 Type: A
 Name: @
 Value: 76.76.21.21
 ```
 
-**For www.ecoshopguide.com:**
+**For www.shopbambana.com:**
 ```
 Type: CNAME
 Name: www
@@ -124,7 +124,7 @@ Once deployed, update your Stripe webhook:
 
 1. Go to [Stripe Dashboard](https://dashboard.stripe.com/webhooks)
 2. Click on your existing webhook endpoint
-3. Update the endpoint URL to: `https://ecoshopguide.com/api/webhook`
+3. Update the endpoint URL to: `https://shopbambana.com/api/webhook`
 4. Or add a new endpoint if needed
 5. Ensure it's listening to: `checkout.session.completed`
 

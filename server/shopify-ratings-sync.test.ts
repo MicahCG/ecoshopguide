@@ -15,7 +15,7 @@ test("patches card snippets once with the rating render marker", () => {
 </div>`;
   const line = `{% comment %} ${RATING_MARKER} {% endcomment %}\n{% render 'ecg-product-rating', product: product, card_product: card_product %}\n`;
   const patched = patchThemeSnippet(original, line);
-  assert.match(patched, /EcoShopGuide product rating/);
+  assert.match(patched, /Bambana product rating/);
   assert.match(patched, /render 'ecg-product-rating'/);
   const refreshed = patchThemeSnippet(patched, line);
   assert.equal(refreshed, patched);
@@ -52,7 +52,7 @@ test("removes misplaced rating renders from css-only strings", () => {
 test("patches esg collection cards before price", () => {
   const original = `<article class="esg-card"><div class="esg-card-body"><h4>Stem</h4><div class="esg-price">$6.95</div></div></article>`;
   const patched = patchEsgCardMarkup(original);
-  assert.match(patched, /EcoShopGuide product rating/);
+  assert.match(patched, /Bambana product rating/);
   assert.match(patched, /render 'ecg-product-rating'/);
   assert.match(patched, /<h4>Stem<\/h4>\s*\{% comment %\}/);
 });

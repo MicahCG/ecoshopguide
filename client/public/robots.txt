@@ -1,4 +1,4 @@
-# robots.txt for ecoshopguide.com
+# robots.txt for shopbambana.com
 # Allow all crawlers including Google AdSense Mediapartners
 
 User-agent: *
@@ -7,4 +7,4 @@ Allow: /
 User-agent: Mediapartners-Google
 Allow: /
 
-Sitemap: https://ecoshopguide.com/api/sitemap.xml
+Sitemap: https://shopbambana.com/api/sitemap.xml

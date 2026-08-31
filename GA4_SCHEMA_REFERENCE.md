@@ -1,4 +1,4 @@
-# EcoShopGuide — GA4 Schema Reference
+# Bambana — GA4 Schema Reference
 
 **Measurement ID:** `G-JWZKR16JFE`
 **Property type:** Google Analytics 4 (web)

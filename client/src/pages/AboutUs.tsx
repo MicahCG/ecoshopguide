@@ -27,14 +27,14 @@ export default function AboutUs() {
               className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-foreground mb-6"
               data-testid="text-page-title"
             >
-              About EcoShopGuide
+              About Bambana
             </h1>
             
             <p 
               className="text-lg text-muted-foreground leading-relaxed mb-4"
               data-testid="text-page-intro"
             >
-              EcoShopGuide is a curated resource for people who care about sustainable living. We hand-pick every guide and recommendation — not because an algorithm told us to, but because we live this way ourselves.
+              Bambana is a curated resource for people who care about sustainable living. We hand-pick every guide and recommendation — not because an algorithm told us to, but because we live this way ourselves.
             </p>
 
             <div className="bg-primary/10 border border-primary/20 rounded-lg p-6 mb-8">
@@ -77,7 +77,7 @@ export default function AboutUs() {
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center gap-2 mb-6">
               <Users className="w-6 h-6 text-primary" />
-              <h2 className="text-2xl font-serif font-bold">Meet the Family Behind EcoShopGuide</h2>
+              <h2 className="text-2xl font-serif font-bold">Meet the Family Behind Bambana</h2>
             </div>
 
             {/* Photos - Large, side by side at top */}
@@ -86,7 +86,7 @@ export default function AboutUs() {
                 <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-xl">
                   <img
                     src={cydelPhoto}
-                    alt="Cydel Giraudel, Co-founder of EcoShopGuide"
+                    alt="Cydel Giraudel, Co-founder of Bambana"
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -99,7 +99,7 @@ export default function AboutUs() {
                 <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-xl">
                   <img
                     src={mersulPhoto}
-                    alt="Mersula Giraudel, Co-founder of EcoShopGuide"
+                    alt="Mersula Giraudel, Co-founder of Bambana"
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -121,7 +121,7 @@ export default function AboutUs() {
               </p>
 
               <p className="text-muted-foreground leading-relaxed">
-                We'd find great stuff eventually, but it took forever to dig through thousands of generic options online. So we built EcoShopGuide: one curated resource where every guide is hand-picked for natural aesthetic, quality, and sustainable living.
+                We'd find great stuff eventually, but it took forever to dig through thousands of generic options online. So we built Bambana: one curated resource where every guide is hand-picked for natural aesthetic, quality, and sustainable living.
               </p>
 
               <div className="bg-white/70 rounded-lg p-4 border border-primary/10 text-left">
@@ -262,7 +262,7 @@ export default function AboutUs() {
                 data-testid="link-pinterest"
               >
                 <SiPinterest className="w-5 h-5" />
-                @ecoshopguide
+                Pinterest
               </a>
             </CardContent>
           </Card>

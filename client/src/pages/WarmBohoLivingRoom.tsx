@@ -43,10 +43,10 @@ const PRODUCTS = [
 
 export default function WarmBohoLivingRoom() {
   usePageSEO({
-    title: "Warm Boho Living Room Decor Ideas | EcoShopGuide",
+    title: "Warm Boho Living Room Decor Ideas | Bambana",
     description:
       "Discover cozy boho living room ideas with earthy tones, leather poufs, indoor plants, and woven wall art. Curated modern and artisan pieces that bring bohemian warmth to any space.",
-    canonical: "https://ecoshopguide.com/pages/warm-boho-living-room",
+    canonical: "https://shopbambana.com/pages/warm-boho-living-room",
   });
 
   return (

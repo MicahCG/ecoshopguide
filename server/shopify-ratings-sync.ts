@@ -2,7 +2,7 @@ import { VERIFIED_COLLECTIVE_DETAILS } from "../shared/verified-collective-ratin
 import { ShopifyAdminRequestError, shopifyAdminRequest } from "./shopify-admin.js";
 
 export const RATING_SNIPPET_FILENAME = "snippets/ecg-product-rating.liquid";
-export const RATING_MARKER = "EcoShopGuide product rating";
+export const RATING_MARKER = "Bambana product rating";
 
 export const RATING_SNIPPET = `{% comment %} ${RATING_MARKER} {% endcomment %}
 {% liquid
@@ -79,7 +79,7 @@ export function patchThemeSnippet(content: string, renderLine: string): string {
   if (content.includes(RATING_MARKER)) {
     // Refresh an older rating render to the latest line.
     return content.replace(
-      /\{%\s*comment\s*%\}\s*EcoShopGuide product rating\s*\{%\s*endcomment\s*%\}\s*\{%\s*render\s+'ecg-product-rating'[^%]*%\}\s*/g,
+      /\{%\s*comment\s*%\}\s*Bambana product rating\s*\{%\s*endcomment\s*%\}\s*\{%\s*render\s+'ecg-product-rating'[^%]*%\}\s*/g,
       renderLine,
     );
   }
@@ -105,7 +105,7 @@ export function patchThemeSnippet(content: string, renderLine: string): string {
 }
 
 const RATING_RENDER_RE =
-  /\{%\s*comment\s*%\}\s*EcoShopGuide product rating\s*\{%\s*endcomment\s*%\}\s*\{%\s*render\s+'ecg-product-rating'[^%]*%\}\s*/g;
+  /\{%\s*comment\s*%\}\s*Bambana product rating\s*\{%\s*endcomment\s*%\}\s*\{%\s*render\s+'ecg-product-rating'[^%]*%\}\s*/g;
 
 function stripRatingRendersFromStyleBlocks(content: string) {
   return content.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, (block) =>

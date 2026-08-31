@@ -225,7 +225,7 @@
 
 /**
  * ── Storefront theme (home page only) ───────────────────────────────────────
- * Ported from the design reference "EcoShopGuide Storefront.dc.html", variant A
+ * Ported from the design reference "Bambana Storefront.dc.html", variant A
  * (editorial-first). Deliberately scoped to .esg-home rather than retuning the
  * global tokens in :root, so the rest of the site keeps its current look until
  * we decide to roll this out. To go site-wide, move these values into :root and

@@ -36,7 +36,7 @@ const lifestylePrompts = [
 async function fetchProductImage(): Promise<string | null> {
   try {
     console.log('📦 Fetching product data to reference...');
-    const response = await fetch('https://www.ecoshopguide.com/api/products');
+    const response = await fetch('https://www.shopbambana.com/api/products');
     const products = await response.json();
 
     // Find the plant stand - try multiple matching strategies

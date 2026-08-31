@@ -35,7 +35,7 @@ export default function WeddingCollection() {
   }) : [];
   const reviewedProducts = products.filter((product) => product.review);
   const remainingProducts = products.filter((product) => !product.review);
-  usePageSEO({ title: "Wedding Collection | EcoShopGuide", description: "Browse the EcoShopGuide Wedding collection.", canonical: "https://www.ecoshopguide.com/shop-the-look/weddings" });
+  usePageSEO({ title: "Wedding Collection | Bambana", description: "Browse the Bambana Wedding collection.", canonical: "https://www.shopbambana.com/shop-the-look/weddings" });
   useEffect(() => { if (query.data) ecoTrack("view_category", { category_id: query.data.id, category_name: query.data.title, item_count: query.data.products.length }); }, [query.data?.id]);
   return <div className="min-h-screen flex flex-col bg-[#f7f4ee] text-[#1f2a24]"><Header/><main className="flex-1"><section className="px-4 py-14 md:py-20 text-center max-w-4xl mx-auto"><p className="uppercase tracking-[.24em] text-xs text-[#c65f3e] font-semibold">Wedding edit</p><h1 className="font-serif text-4xl md:text-6xl mt-3">{query.data?.title || "Wedding Collection"}</h1><p className="mt-5 text-muted-foreground max-w-2xl mx-auto">Thoughtful details for your celebration, sourced directly from our current shop catalog.</p></section>
   {query.isPending ? <WeddingCollectionSkeleton /> : null}{query.isError && <div role="alert" className="text-center py-16 px-4"><p>We couldn’t load the Wedding collection right now.</p><button className="mt-4 underline" onClick={() => query.refetch()}>Try again</button></div>}

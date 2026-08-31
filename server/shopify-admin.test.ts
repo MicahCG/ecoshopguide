@@ -26,7 +26,7 @@ test("uses a server-only access token for Admin GraphQL", async () => {
     if (requests.length === 1) {
       return new Response(JSON.stringify({ access_token: "temporary-token", expires_in: 3600 }), { status: 200 });
     }
-    return new Response(JSON.stringify({ data: { shop: { name: "EcoShopGuide" } } }), { status: 200 });
+    return new Response(JSON.stringify({ data: { shop: { name: "Bambana" } } }), { status: 200 });
   };
 
   const result = await shopifyAdminRequest<{ shop: { name: string } }>(
@@ -35,7 +35,7 @@ test("uses a server-only access token for Admin GraphQL", async () => {
     { env, fetchImpl, now: () => 1_000 },
   );
 
-  assert.equal(result.shop.name, "EcoShopGuide");
+  assert.equal(result.shop.name, "Bambana");
   assert.match(requests[0].url, /admin\/oauth\/access_token$/);
   assert.match(requests[1].url, /admin\/api\/2026-07\/graphql\.json$/);
   assert.equal(requests[1].init?.headers && (requests[1].init.headers as Record<string, string>)["X-Shopify-Access-Token"], "temporary-token");
